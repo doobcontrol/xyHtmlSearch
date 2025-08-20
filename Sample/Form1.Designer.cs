@@ -50,6 +50,7 @@
             textBox1.Location = new Point(12, 53);
             textBox1.Multiline = true;
             textBox1.Name = "textBox1";
+            textBox1.ScrollBars = ScrollBars.Both;
             textBox1.Size = new Size(776, 394);
             textBox1.TabIndex = 1;
             // 
