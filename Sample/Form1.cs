@@ -74,16 +74,31 @@ namespace Sample
             sps.start = @"{""richItemRenderer"":{""content"":{""videoRenderer"":{""videoId"":""";
             sps.end = @"""trackingParams"":""";
             sPars.Add(sps);
+
+            List<string> retList = htmlParserTool.findList(htmlStr, sPars);
+
+            Dictionary<string, SearchParsStruct> spsDic
+                = new Dictionary<string, SearchParsStruct>();
             sps = new SearchParsStruct();
             sps.start = @"""title"":{""runs"":[{""text"":""";
             sps.end = @"}],""";
-            sPars.Add(sps);
+            spsDic.Add("title", sps);
+            sps = new SearchParsStruct();
+            sps.start = @"""commandMetadata"":{""webCommandMetadata"":{""url"":""";
+            sps.end = @""",""";
+            spsDic.Add("url", sps);
 
-            List<string> retList = htmlParserTool.findList(htmlStr, sPars);
-            textBox1.Text = "Total count: " + retList.Count + "\r\n";
-            foreach (string s in retList)
+            List<Dictionary<string,string>> vRecords 
+                = new List<Dictionary<string,string>>();
+            foreach(string s in retList)
             {
-                textBox1.Text += s + "\r\n";
+                vRecords.Add(htmlParserTool.findMuti(s, spsDic));
+            }
+
+            textBox1.Text = "Total count: " + retList.Count + "\r\n";
+            foreach (Dictionary<string, string> vDic in vRecords)
+            {
+                textBox1.Text += vDic["title"] + "; " + vDic["url"] + "\r\n";
             }
             panel1.Enabled = true;
         }

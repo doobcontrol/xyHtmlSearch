@@ -193,6 +193,23 @@
             return retList;
         }
 
+        static public Dictionary<string,string> findMuti(
+            string strForFind,
+            Dictionary<string, SearchParsStruct> spsDic
+            )
+        {
+            Dictionary<string, string> retDic = 
+                new Dictionary<string, string>();
+
+            foreach( string s in spsDic.Keys)
+            {
+                retDic.Add(s, 
+                    findBetween(strForFind, spsDic[s].start, spsDic[s].end));
+            }
+
+            return retDic;
+        }
+
         static List<string> illegalChrs = new List<string>{
             "&nbsp;",
             "amp;",
