@@ -1,3 +1,5 @@
+using NanoXLSX;
+using NanoXLSX.Styles;
 using xyHtmlSearch;
 
 namespace Sample
@@ -100,7 +102,29 @@ namespace Sample
             {
                 textBox1.Text += vDic["title"] + "; " + vDic["url"] + "\r\n";
             }
+
+            writeToXlsx(vRecords);
+
             panel1.Enabled = true;
+        }
+        
+        private void writeToXlsx(List<Dictionary<string, string>> vRecords)
+        {
+            // Create a new workbook with a worksheet named "Sheet1"
+            Workbook workbook = new Workbook("Amaravati.xlsx", "Sheet1");
+
+            workbook.WS.Value("Title", BasicStyles.Bold);
+            workbook.WS.Value("Url", BasicStyles.Bold);
+
+            foreach (Dictionary<string, string> vDic in vRecords)
+            {
+                workbook.WS.Down();
+                workbook.WS.Value(vDic["title"]);
+                workbook.WS.Value("https://www.youtube.com" + vDic["url"]);
+            }
+
+            // Save the workbook
+            workbook.Save();
         }
     }
 }
