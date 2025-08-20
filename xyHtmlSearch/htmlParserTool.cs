@@ -180,11 +180,12 @@
                     }
                     else
                     {
+                        List<string> tempList = new List<string>();
                         foreach (string s in retList)
                         {
-                            retList[retList.IndexOf(s)] =
-                                findBetween(s, sps.start, sps.end);
+                            tempList.Add(findBetween(s, sps.start, sps.end));
                         }
+                        retList = tempList;
                     }
                 }
             }
