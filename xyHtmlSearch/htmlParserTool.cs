@@ -1,4 +1,7 @@
-﻿namespace xyHtmlSearch
+﻿using System;
+using System.Web;
+
+namespace xyHtmlSearch
 {
     public class htmlParserTool
     {
@@ -77,7 +80,7 @@
             {
                 retStr = strForFind.Substring(startIndex, endIndex - startIndex);
             }
-            return retStr;
+            return HttpUtility.HtmlDecode(retStr);
         }
 
         //find all
@@ -109,10 +112,9 @@
                 }
                 else
                 {
-                    retList.Add(
-                        strForFind.Substring(retStartIndex, retEndIndex - retStartIndex)
-
-                        );
+                    string tempStr = 
+                        strForFind.Substring(retStartIndex, retEndIndex - retStartIndex);                    
+                    retList.Add(HttpUtility.HtmlDecode(tempStr));
                     beginIndex = retEndIndex + endStrLen;
                 }
             }
@@ -131,13 +133,17 @@
             foreach (SearchParsStruct sps in sPars) {
                 if (sps.searchList) {
                     throw new Exception("Error pars");
-                } 
-                else 
+                }
+                else if (sps.constant != null)
+                {
+                    retStr = sps.constant;
+                }
+                else
                 {
                     retStr = findBetween(retStr, sps.start, sps.end);
                 }
             }
-
+            retStr = finishHandle(retStr, sPars.Last());
             return retStr;
         }
 
@@ -188,8 +194,12 @@
                         retList = tempList;
                     }
                 }
-            }
 
+            }
+            for(int i = 0; i < retList.Count; i++)
+            {
+                retList[i] = finishHandle(retList[i], sPars.Last());
+            }
             return retList;
         }
 
@@ -203,11 +213,28 @@
 
             foreach( string s in spsDic.Keys)
             {
-                retDic.Add(s, 
-                    findBetween(strForFind, spsDic[s].start, spsDic[s].end));
+                string tempStr = finishHandle(
+                    findBetween(strForFind, spsDic[s].start, spsDic[s].end),
+                    spsDic[s]);
+                retDic.Add(s, tempStr);
+            }
+            return retDic;
+        }
+
+        static private string finishHandle(string fString, SearchParsStruct sps)
+        {
+            string retStr = fString;
+
+            if (sps.addBefore != null)
+            {
+                retStr = sps.addBefore + retStr;
+            }
+            if (sps.addAfter != null)
+            {
+                retStr = retStr + sps.addAfter;
             }
 
-            return retDic;
+            return retStr;
         }
 
         static List<string> illegalChrs = new List<string>{
@@ -264,5 +291,11 @@
         public string start;
         public string end;
         public bool searchList;
+        public Dictionary<string, SearchParsStruct> recordDef;
+
+        public string addBefore;
+        public string addAfter;
+
+        public string constant; //If this variable is not null, the other variables are meaningless.
     }
 }

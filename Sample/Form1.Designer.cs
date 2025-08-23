@@ -32,6 +32,7 @@
             textBox1 = new TextBox();
             btnYouTube = new Button();
             panel1 = new Panel();
+            btnScrap = new Button();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -53,6 +54,7 @@
             textBox1.ScrollBars = ScrollBars.Both;
             textBox1.Size = new Size(776, 394);
             textBox1.TabIndex = 1;
+            textBox1.WordWrap = false;
             // 
             // btnYouTube
             // 
@@ -66,6 +68,7 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(btnScrap);
             panel1.Controls.Add(btnStart);
             panel1.Controls.Add(btnYouTube);
             panel1.Dock = DockStyle.Top;
@@ -73,6 +76,16 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(800, 47);
             panel1.TabIndex = 3;
+            // 
+            // btnScrap
+            // 
+            btnScrap.Location = new Point(212, 12);
+            btnScrap.Name = "btnScrap";
+            btnScrap.Size = new Size(94, 29);
+            btnScrap.TabIndex = 3;
+            btnScrap.Text = "Scrap";
+            btnScrap.UseVisualStyleBackColor = true;
+            btnScrap.Click += btnScrap_Click;
             // 
             // Form1
             // 
@@ -94,5 +107,6 @@
         private TextBox textBox1;
         private Button btnYouTube;
         private Panel panel1;
+        private Button btnScrap;
     }
 }

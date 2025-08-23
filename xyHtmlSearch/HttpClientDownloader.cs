@@ -15,6 +15,7 @@ namespace xyHtmlSearch
         public HttpClientDownloader(HttpClient? httpClient = null)
         {
             _httpClient = httpClient ?? new HttpClient();
+            _httpClient.Timeout = Timeout.InfiniteTimeSpan;
         }
 
         public async Task DownloadFileAsync(
