@@ -13,11 +13,14 @@ namespace Sample
         public Form1()
         {
             InitializeComponent();
-
+            Text = "LinkSearcher";
             progress = new SimpleProgress<ScrapReport>(scrappingReport);
 
+            btnStart.Visible = false;
+            btnYouTube.Visible = false;
+
             PageParserConfig.nameParser += PageParserConfigNameParser;
-            PageScraper.RecordFields = 
+            PageScraper.RecordFields =
                 Enum.GetNames(typeof(DRecord)).ToList<string>();
 
             //https://Amaravati.org/teachings
@@ -40,7 +43,7 @@ namespace Sample
             ppc.urlSearchPars = sPars;
             Dictionary<string, List<SearchParsStruct>> defaultRecordValuePars
                 = new Dictionary<string, List<SearchParsStruct>>();
-            ppc.defaultRecordValuePars = defaultRecordValuePars; 
+            ppc.defaultRecordValuePars = defaultRecordValuePars;
             sPars = new List<SearchParsStruct>();
             sps = new SearchParsStruct();
             sps.constant = "ENG";
@@ -196,8 +199,241 @@ namespace Sample
             sps.constant = "admin@meridian-trust.org";
             sPars.Add(sps);
             defaultRecordValuePars.Add(DRecord.LINK_CONTACT.ToString(), sPars);
+            ppc.isDefaultRecordLocal = true;
 
             //https://amaravati.org/teachings/audio/
+            ppc = new PageParserConfig();
+            PageParserConfig.ppcDic.Add("DhammaTalksAudio", ppc);
+            sPars = new List<SearchParsStruct>();
+            sps = new SearchParsStruct(true);
+            sps.start = @"<div class=""pod-entry__title"">";
+            sps.end = @"</a>";
+
+            spsDic
+                = new Dictionary<string, SearchParsStruct>();
+            sps1 = new SearchParsStruct();
+            sps1.start = @""">";
+            sps1.end = @"";
+            spsDic.Add(DRecord.BOOK.ToString(), sps1);
+            sps1 = new SearchParsStruct();
+            sps1.start = @"<a href=""";
+            sps1.end = @""">";
+            spsDic.Add(DRecord.LINK.ToString(), sps1);
+            sps.recordDef = spsDic;
+
+            sPars.Add(sps);
+            dataSearchPars = new Dictionary<string, List<SearchParsStruct>>();
+            dataSearchPars.Add("default", sPars);
+            ppc.dataSearchPars = dataSearchPars;
+
+            defaultRecordValuePars
+                = new Dictionary<string, List<SearchParsStruct>>();
+            ppc.defaultRecordValuePars = defaultRecordValuePars;
+            sPars = new List<SearchParsStruct>();
+            sps = new SearchParsStruct();
+            sps.constant = "MP3";
+            sPars.Add(sps);
+            defaultRecordValuePars.Add(DRecord.FORMAT.ToString(), sPars);
+            ppc.isDefaultRecordLocal = true;
+
+            //https://amaravati.org/dhamma-audio-library/?wpv-category=audio
+            ppc = new PageParserConfig();
+            PageParserConfig.ppcDic.Add("dhamma-audio-library", ppc);
+            sPars = new List<SearchParsStruct>();
+            sps = new SearchParsStruct(true);
+            sps.start = @"<div class=""tb-fields-and-text""";
+            sps.end = @"<p></p>";
+
+            spsDic
+                = new Dictionary<string, SearchParsStruct>();
+            sps1 = new SearchParsStruct();
+            sps1.start = @"content=""";
+            sps1.end = @"""";
+            spsDic.Add(DRecord.BOOK.ToString(), sps1);
+            sps1 = new SearchParsStruct();
+            sps1.start = @"Audio: <a href=""";
+            sps1.end = @"""";
+            spsDic.Add(DRecord.LINK.ToString(), sps1);
+            sps1 = new SearchParsStruct();
+            sps1.start = @"</a><br>By:";
+            sps1.end = @"<br>";
+            spsDic.Add(DRecord.AUTHOR.ToString(), sps1);
+            sps.recordDef = spsDic;
+
+            sPars.Add(sps);
+            dataSearchPars = new Dictionary<string, List<SearchParsStruct>>();
+            dataSearchPars.Add("default", sPars);
+            ppc.dataSearchPars = dataSearchPars;
+
+            defaultRecordValuePars
+                = new Dictionary<string, List<SearchParsStruct>>();
+            ppc.defaultRecordValuePars = defaultRecordValuePars;
+            sPars = new List<SearchParsStruct>();
+            sps = new SearchParsStruct();
+            sps.constant = "MP3";
+            sPars.Add(sps);
+            defaultRecordValuePars.Add(DRecord.FORMAT.ToString(), sPars);
+            ppc.isDefaultRecordLocal = true;
+
+            sPars = new List<SearchParsStruct>();
+            sps = new SearchParsStruct();
+            sps.start = @"<a class=""wpv-filter-next-link js-wpv-pagination-next-link page-link ""  href=""";
+            sps.end = @"""";
+            sps.addBefore = "https://amaravati.org";
+            sPars.Add(sps);
+            ppc.urlSearchPars = sPars;
+
+            //https://amaravati.org/teachings/chanting/
+            ppc = new PageParserConfig();
+            PageParserConfig.ppcDic.Add("ChantingAudio", ppc);
+            sPars = new List<SearchParsStruct>();
+            sps = new SearchParsStruct(true);
+            sps.start = @"<div class=""pod-entry__title"">";
+            sps.end = @"<div id=""";
+
+            spsDic
+                = new Dictionary<string, SearchParsStruct>();
+            sps1 = new SearchParsStruct();
+            sps1.start = @""">";
+            sps1.end = @"</a>>";
+            spsDic.Add(DRecord.BOOK.ToString(), sps1);
+            sps1 = new SearchParsStruct();
+            sps1.start = @"<a href=""";
+            sps1.end = @""">";
+            spsDic.Add(DRecord.LINK.ToString(), sps1);
+            sps1 = new SearchParsStruct();
+            sps1.start = @"<div class=""pod-entry__author"">";
+            sps1.end = @"</div>";
+            spsDic.Add(DRecord.AUTHOR.ToString(), sps1);
+            sps.recordDef = spsDic;
+
+            sPars.Add(sps);
+            dataSearchPars = new Dictionary<string, List<SearchParsStruct>>();
+            dataSearchPars.Add("default", sPars);
+            ppc.dataSearchPars = dataSearchPars;
+
+            defaultRecordValuePars
+                = new Dictionary<string, List<SearchParsStruct>>();
+            ppc.defaultRecordValuePars = defaultRecordValuePars;
+            sPars = new List<SearchParsStruct>();
+            sps = new SearchParsStruct();
+            sps.constant = "MP3";
+            sPars.Add(sps);
+            defaultRecordValuePars.Add(DRecord.FORMAT.ToString(), sPars);
+            ppc.isDefaultRecordLocal = true;
+
+            //https://amaravati.org/teachings/meditation/
+            ppc = new PageParserConfig();
+            PageParserConfig.ppcDic.Add("MeditationAudio", ppc);
+            sPars = new List<SearchParsStruct>();
+            sps = new SearchParsStruct(true);
+            sps.start = @"<div class=""pod-entry__title"">";
+            sps.end = @"</a>";
+
+            spsDic
+                = new Dictionary<string, SearchParsStruct>();
+            sps1 = new SearchParsStruct();
+            sps1.start = @""">";
+            sps1.end = @"";
+            spsDic.Add(DRecord.BOOK.ToString(), sps1);
+            sps1 = new SearchParsStruct();
+            sps1.start = @"<a href=""";
+            sps1.end = @""">";
+            spsDic.Add(DRecord.LINK.ToString(), sps1);
+            sps.recordDef = spsDic;
+
+            sPars.Add(sps);
+            dataSearchPars = new Dictionary<string, List<SearchParsStruct>>();
+            dataSearchPars.Add("default", sPars);
+            ppc.dataSearchPars = dataSearchPars;
+
+            defaultRecordValuePars
+                = new Dictionary<string, List<SearchParsStruct>>();
+            ppc.defaultRecordValuePars = defaultRecordValuePars;
+            sPars = new List<SearchParsStruct>();
+            sps = new SearchParsStruct();
+            sps.constant = "MP3";
+            sPars.Add(sps);
+            defaultRecordValuePars.Add(DRecord.FORMAT.ToString(), sPars);
+            ppc.isDefaultRecordLocal = true;
+
+            //https://media.amaravati.org/dhamma-books
+            ppc = new PageParserConfig();
+            PageParserConfig.ppcDic.Add("dhamma-books", ppc);
+            sPars = new List<SearchParsStruct>();
+            sps = new SearchParsStruct(true);
+            sps.start = @"<h3 class=""font-serif text-xl";
+            sps.end = @"<div class=""flex justify-end";
+
+            spsDic
+                = new Dictionary<string, SearchParsStruct>();
+            sps1 = new SearchParsStruct();
+            sps1.start = @"title"">        ";
+            sps1.end = @"      </h3>";
+            spsDic.Add(DRecord.BOOK.ToString(), sps1);
+            sps1 = new SearchParsStruct();
+            sps1.start = @"href=""";
+            sps1.end = @"""      target=""_blank""      wire:key=""pdf""    >PDF";
+            spsDic.Add(DRecord.LINK.ToString(), sps1);
+            sps1 = new SearchParsStruct();
+            sps1.start = @" >";
+            sps1.end = @"</a>";
+            spsDic.Add(DRecord.AUTHOR.ToString(), sps1);
+            sps.recordDef = spsDic;
+
+            sPars.Add(sps);
+            dataSearchPars = new Dictionary<string, List<SearchParsStruct>>();
+            dataSearchPars.Add("default", sPars);
+            ppc.dataSearchPars = dataSearchPars;
+
+            defaultRecordValuePars
+                = new Dictionary<string, List<SearchParsStruct>>();
+            ppc.defaultRecordValuePars = defaultRecordValuePars;
+            sPars = new List<SearchParsStruct>();
+            sps = new SearchParsStruct();
+            sps.constant = "PDF";
+            sPars.Add(sps);
+            defaultRecordValuePars.Add(DRecord.FORMAT.ToString(), sPars);
+            ppc.isDefaultRecordLocal = true;
+
+            //https://media.amaravati.org/dhamma-articles
+            ppc = new PageParserConfig();
+            PageParserConfig.ppcDic.Add("dhamma-articles", ppc);
+            sPars = new List<SearchParsStruct>();
+            sps = new SearchParsStruct(true);
+            sps.start = @"<hgroup ";
+            sps.end = @"</hgroup>";
+
+            spsDic
+                = new Dictionary<string, SearchParsStruct>();
+            sps1 = new SearchParsStruct();
+            sps1.start = @"title"">        ";
+            sps1.end = @"      </h3>";
+            spsDic.Add(DRecord.BOOK.ToString(), sps1);
+            sps1 = new SearchParsStruct();
+            sps1.start = @"href=""";
+            sps1.end = @"""";
+            spsDic.Add(DRecord.LINK.ToString(), sps1);
+            sps1 = new SearchParsStruct();
+            sps1.start = @"wire:navigate        >";
+            sps1.end = @"</a>";
+            spsDic.Add(DRecord.AUTHOR.ToString(), sps1);
+            sps.recordDef = spsDic;
+
+            sPars.Add(sps);
+            dataSearchPars = new Dictionary<string, List<SearchParsStruct>>();
+            dataSearchPars.Add("default", sPars);
+            ppc.dataSearchPars = dataSearchPars;
+
+            defaultRecordValuePars
+                = new Dictionary<string, List<SearchParsStruct>>();
+            ppc.defaultRecordValuePars = defaultRecordValuePars;
+            sPars = new List<SearchParsStruct>();
+            sps = new SearchParsStruct();
+            sps.constant = "WEB";
+            sPars.Add(sps);
+            defaultRecordValuePars.Add(DRecord.FORMAT.ToString(), sPars);
+            ppc.isDefaultRecordLocal = true;
         }
 
         private async void btnStart_Click(object sender, EventArgs e)
@@ -318,7 +554,7 @@ namespace Sample
         private string PageParserConfigNameParser(string url)
         {
             string retStr = null;
-            
+
             if (url == "https://Amaravati.org/teachings")
             {
                 retStr = "Amaravati";
@@ -339,6 +575,30 @@ namespace Sample
             else if (url == "https://meridian-trust.org/category/teachers/ajahn-sumedho/")
             {
                 retStr = "meridian-trust";
+            }
+            else if (url == "https://amaravati.org/teachings/audio/")
+            {
+                retStr = "DhammaTalksAudio";
+            }
+            else if (url.StartsWith("https://amaravati.org/dhamma-audio-library/?wpv-category=audio"))
+            {
+                retStr = "dhamma-audio-library";
+            }
+            else if (url == "https://amaravati.org/teachings/chanting/")
+            {
+                retStr = "ChantingAudio";
+            }
+            else if (url == "https://amaravati.org/teachings/meditation/")
+            {
+                retStr = "MeditationAudio";
+            }
+            else if (url == "https://media.amaravati.org/dhamma-books")
+            {
+                retStr = "dhamma-books";
+            }
+            else if (url == "https://media.amaravati.org/dhamma-articles")
+            {
+                retStr = "dhamma-articles";
             }
             else
             {
@@ -436,7 +696,7 @@ namespace Sample
                     //}
                     break;
                 case ScrapReport.rType.RecordList:
-                    List<Dictionary<string, string>>  vRecords = data.RecordList;
+                    List<Dictionary<string, string>> vRecords = data.RecordList;
                     //showMsg("Total count: " + vRecords.Count);
                     //foreach (Dictionary<string, string> vDic in vRecords)
                     //{
@@ -451,10 +711,10 @@ namespace Sample
         private async void btnScrap_Click(object sender, EventArgs e)
         {
             panel1.Enabled = false;
-
+            showMsg("Begin:\r\n");
             cts = new CancellationTokenSource();
 
-            workbook = new Workbook("Amaravati.xlsx", "Sheet1");
+            workbook = new Workbook("LinkSearcher.xlsx", "Sheet1");
 
             foreach (string s in PageScraper.RecordFields)
             {
@@ -471,6 +731,7 @@ namespace Sample
 
             // Save the workbook
             workbook.Save();
+            showMsg("\r\nAll tasks are complete, and the results have been written to the LinkSearcher.xlsx file.");
         }
 
         private void showMsg(string msg)
@@ -487,6 +748,11 @@ namespace Sample
             {
                 textBox1.AppendText(msg + "\r\n");
             }
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            cts?.Cancel();
         }
     }
     public enum DRecord

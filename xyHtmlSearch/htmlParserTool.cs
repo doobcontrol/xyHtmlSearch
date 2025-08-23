@@ -196,9 +196,16 @@ namespace xyHtmlSearch
                 }
 
             }
-            for(int i = 0; i < retList.Count; i++)
+            if(retList == null && searchStr != strForFind)
             {
-                retList[i] = finishHandle(retList[i], sPars.Last());
+                retList = [searchStr];
+            }
+            if (retList != null)
+            {
+                for (int i = 0; i < retList.Count; i++)
+                {
+                    retList[i] = finishHandle(retList[i], sPars.Last());
+                }
             }
             return retList;
         }

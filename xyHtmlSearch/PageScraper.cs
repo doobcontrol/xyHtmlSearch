@@ -19,6 +19,7 @@ namespace xyHtmlSearch
             PageParserConfig ppc = PageParserConfig.get(url);
             string htmlStr =
                 await hcd.GetHtmlStringAsync(url, ppc.Encoding);
+            htmlStr = htmlStr.Replace("\r", "").Replace("\n", "");
 
             Dictionary<string, string> DefaultRecord = null;
             if (DefaultRecordStack.Count > 0)
