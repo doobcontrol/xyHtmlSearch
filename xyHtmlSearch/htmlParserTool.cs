@@ -212,7 +212,7 @@ namespace xyHtmlSearch
 
         static public Dictionary<string,string> findMuti(
             string strForFind,
-            Dictionary<string, SearchParsStruct> spsDic
+            Dictionary<string, List<SearchParsStruct>> spsDic
             )
         {
             Dictionary<string, string> retDic = 
@@ -221,8 +221,8 @@ namespace xyHtmlSearch
             foreach( string s in spsDic.Keys)
             {
                 string tempStr = finishHandle(
-                    findBetween(strForFind, spsDic[s].start, spsDic[s].end),
-                    spsDic[s]);
+                    findOne(strForFind, spsDic[s]),
+                    spsDic[s].Last());
                 retDic.Add(s, tempStr);
             }
             return retDic;
@@ -298,8 +298,9 @@ namespace xyHtmlSearch
         public string start;
         public string end;
         public bool searchList;
-        public Dictionary<string, SearchParsStruct> recordDef;
+        public Dictionary<string, List<SearchParsStruct>> recordDef;
 
+        //Additional processing
         public string addBefore;
         public string addAfter;
 

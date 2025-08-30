@@ -4,7 +4,24 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Title>Html info Searcher</Title>
+    <Authors>xySoft</Authors>
+    <Company>xySoft</Company>
+    <Description>Search infomation in HTML text</Description>
+    <PackageProjectUrl>https://github.com/doobcontrol/xyHtmlSearch</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/doobcontrol/xyHtmlSearch</RepositoryUrl>
+    <PackageTags>HTML;WEB;SCRAPE</PackageTags>
+    <PackageOutputPath>..\..\..\package</PackageOutputPath>
+    <Version>1.0.0.2</Version>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="NanoXLSX" Version="2.6.4" />

@@ -1,6 +1,7 @@
 using Microsoft.VisualBasic.Logging;
 using NanoXLSX;
 using NanoXLSX.Styles;
+using System.Collections.Generic;
 using System.Resources;
 using xyHtmlSearch;
 
@@ -20,7 +21,7 @@ namespace Sample
             btnYouTube.Visible = false;
 
             PageParserConfig.nameParser += PageParserConfigNameParser;
-            PageScraper.RecordFields =
+            PageParserConfig.RecordFields =
                 Enum.GetNames(typeof(DRecord)).ToList<string>();
 
             //https://Amaravati.org/teachings
@@ -90,24 +91,23 @@ namespace Sample
             sps.start = @"{""richItemRenderer"":{""content"":{""videoRenderer"":{""videoId"":""";
             sps.end = @"""trackingParams"":""";
 
-            Dictionary<string, SearchParsStruct> spsDic
-                = new Dictionary<string, SearchParsStruct>();
-            SearchParsStruct sps1 = new SearchParsStruct();
-            sps1.start = @"""title"":{""runs"":[{""text"":""";
-            sps1.end = @"}],""";
+            Dictionary<string, List<SearchParsStruct>> spsDic
+                = new Dictionary<string, List<SearchParsStruct>>();
+            List<SearchParsStruct> sps1 = new List<SearchParsStruct>()
+            { new SearchParsStruct(){
+            start = @"""title"":{""runs"":[{""text"":""",
+            end = @"}],"""} };
             spsDic.Add(DRecord.BOOK.ToString(), sps1);
-            sps1 = new SearchParsStruct();
-            sps1.start = @"""commandMetadata"":{""webCommandMetadata"":{""url"":""";
-            sps1.end = @""",""";
-            sps1.addBefore = "https://www.youtube.com";
+            sps1 = new List<SearchParsStruct>()
+            { new SearchParsStruct(){
+            start = @"""commandMetadata"":{""webCommandMetadata"":{""url"":""",
+            end = @""",""",
+            addBefore = "https://www.youtube.com"} };
             spsDic.Add(DRecord.LINK.ToString(), sps1);
             sps.recordDef = spsDic;
 
             sPars.Add(sps);
-            Dictionary<string, List<SearchParsStruct>> dataSearchPars
-            = new Dictionary<string, List<SearchParsStruct>>();
-            dataSearchPars.Add("default", sPars);
-            ppc.dataSearchPars = dataSearchPars;
+            ppc.dataSearchPars = sPars;
 
             defaultRecordValuePars
                 = new Dictionary<string, List<SearchParsStruct>>();
@@ -127,26 +127,27 @@ namespace Sample
             sps.end = @"}]}}}],""videoInfo"":{""runs"":[{""text"":""";
 
             spsDic
-                = new Dictionary<string, SearchParsStruct>();
-            sps1 = new SearchParsStruct();
-            sps1.start = @",""title"":{""runs"":[{""text"":""";
-            sps1.end = @"""}],""";
+                = new Dictionary<string, List<SearchParsStruct>>();
+            sps1 = new List<SearchParsStruct>()
+            { new SearchParsStruct(){
+            start = @",""title"":{""runs"":[{""text"":""",
+            end = @"""}],"""} };
             spsDic.Add(DRecord.BOOK.ToString(), sps1);
-            sps1 = new SearchParsStruct();
-            sps1.start = @"""commandMetadata"":{""webCommandMetadata"":{""url"":""";
-            sps1.end = @""",""webPageType"":""WEB_PAGE_TYPE_WATCH"",""";
-            sps1.addBefore = "https://www.youtube.com";
+            sps1 = new List<SearchParsStruct>()
+            { new SearchParsStruct(){
+            start = @"""commandMetadata"":{""webCommandMetadata"":{""url"":""",
+            end = @""",""webPageType"":""WEB_PAGE_TYPE_WATCH"",""",
+            addBefore = "https://www.youtube.com"} };
             spsDic.Add(DRecord.LINK.ToString(), sps1);
-            sps1 = new SearchParsStruct();
-            sps1.start = @"""shortBylineText"":{""runs"":[{""text"":""";
-            sps1.end = @""",""";
+            sps1 = new List<SearchParsStruct>()
+            { new SearchParsStruct(){
+            start = @"""shortBylineText"":{""runs"":[{""text"":""",
+            end = @""","""} };
             spsDic.Add(DRecord.AUTHOR.ToString(), sps1);
             sps.recordDef = spsDic;
 
             sPars.Add(sps);
-            dataSearchPars = new Dictionary<string, List<SearchParsStruct>>();
-            dataSearchPars.Add("default", sPars);
-            ppc.dataSearchPars = dataSearchPars;
+            ppc.dataSearchPars = sPars;
 
             defaultRecordValuePars
                 = new Dictionary<string, List<SearchParsStruct>>();
@@ -166,25 +167,26 @@ namespace Sample
             sps.end = @"</a>";
 
             spsDic
-                = new Dictionary<string, SearchParsStruct>();
-            sps1 = new SearchParsStruct();
-            sps1.start = @""">";
-            sps1.end = @"";
+                = new Dictionary<string, List<SearchParsStruct>>();
+            sps1 = new List<SearchParsStruct>()
+            { new SearchParsStruct(){
+            start = @""">",
+            end = @""} };
             spsDic.Add(DRecord.BOOK.ToString(), sps1);
-            sps1 = new SearchParsStruct();
-            sps1.start = @"<a href=""";
-            sps1.end = @""">";
+            sps1 = new List<SearchParsStruct>()
+            { new SearchParsStruct(){
+            start = @"<a href=""",
+            end = @""">"} };
             spsDic.Add(DRecord.LINK.ToString(), sps1);
-            sps1 = new SearchParsStruct();
-            sps1.start = @"<div class=""c-title"">";
-            sps1.end = @" | <span class=""";
+            sps1 = new List<SearchParsStruct>()
+            { new SearchParsStruct(){
+            start = @"<div class=""c-title"">",
+            end = @" | <span class="""} };
             spsDic.Add(DRecord.AUTHOR.ToString(), sps1);
             sps.recordDef = spsDic;
 
             sPars.Add(sps);
-            dataSearchPars = new Dictionary<string, List<SearchParsStruct>>();
-            dataSearchPars.Add("default", sPars);
-            ppc.dataSearchPars = dataSearchPars;
+            ppc.dataSearchPars = sPars;
 
             defaultRecordValuePars
                 = new Dictionary<string, List<SearchParsStruct>>();
@@ -210,21 +212,21 @@ namespace Sample
             sps.end = @"</a>";
 
             spsDic
-                = new Dictionary<string, SearchParsStruct>();
-            sps1 = new SearchParsStruct();
-            sps1.start = @""">";
-            sps1.end = @"";
+                = new Dictionary<string, List<SearchParsStruct>>();
+            sps1 = new List<SearchParsStruct>()
+            { new SearchParsStruct(){
+            start = @""">",
+            end = @""} };
             spsDic.Add(DRecord.BOOK.ToString(), sps1);
-            sps1 = new SearchParsStruct();
-            sps1.start = @"<a href=""";
-            sps1.end = @""">";
+            sps1 = new List<SearchParsStruct>()
+            { new SearchParsStruct(){
+            start = @"<a href=""",
+            end = @""">"} };
             spsDic.Add(DRecord.LINK.ToString(), sps1);
             sps.recordDef = spsDic;
 
             sPars.Add(sps);
-            dataSearchPars = new Dictionary<string, List<SearchParsStruct>>();
-            dataSearchPars.Add("default", sPars);
-            ppc.dataSearchPars = dataSearchPars;
+            ppc.dataSearchPars = sPars;
 
             defaultRecordValuePars
                 = new Dictionary<string, List<SearchParsStruct>>();
@@ -245,25 +247,26 @@ namespace Sample
             sps.end = @"<p></p>";
 
             spsDic
-                = new Dictionary<string, SearchParsStruct>();
-            sps1 = new SearchParsStruct();
-            sps1.start = @"content=""";
-            sps1.end = @"""";
+                = new Dictionary<string, List<SearchParsStruct>>();
+            sps1 = new List<SearchParsStruct>()
+            { new SearchParsStruct(){
+            start = @"content=""",
+            end = @""""} };
             spsDic.Add(DRecord.BOOK.ToString(), sps1);
-            sps1 = new SearchParsStruct();
-            sps1.start = @"Audio: <a href=""";
-            sps1.end = @"""";
+            sps1 = new List<SearchParsStruct>()
+            { new SearchParsStruct(){
+            start = @"Audio: <a href=""",
+            end = @""""} };
             spsDic.Add(DRecord.LINK.ToString(), sps1);
-            sps1 = new SearchParsStruct();
-            sps1.start = @"</a><br>By:";
-            sps1.end = @"<br>";
+            sps1 = new List<SearchParsStruct>()
+            { new SearchParsStruct(){
+            start = @"</a><br>By:",
+            end = @"<br>"} };
             spsDic.Add(DRecord.AUTHOR.ToString(), sps1);
             sps.recordDef = spsDic;
 
             sPars.Add(sps);
-            dataSearchPars = new Dictionary<string, List<SearchParsStruct>>();
-            dataSearchPars.Add("default", sPars);
-            ppc.dataSearchPars = dataSearchPars;
+            ppc.dataSearchPars = sPars;
 
             defaultRecordValuePars
                 = new Dictionary<string, List<SearchParsStruct>>();
@@ -292,25 +295,26 @@ namespace Sample
             sps.end = @"<div id=""";
 
             spsDic
-                = new Dictionary<string, SearchParsStruct>();
-            sps1 = new SearchParsStruct();
-            sps1.start = @""">";
-            sps1.end = @"</a>>";
+                = new Dictionary<string, List<SearchParsStruct>>();
+            sps1 = new List<SearchParsStruct>()
+            { new SearchParsStruct(){
+            start = @""">",
+            end = @"</a>>"} };
             spsDic.Add(DRecord.BOOK.ToString(), sps1);
-            sps1 = new SearchParsStruct();
-            sps1.start = @"<a href=""";
-            sps1.end = @""">";
+            sps1 = new List<SearchParsStruct>()
+            { new SearchParsStruct(){
+            start = @"<a href=""",
+            end = @""">"} };
             spsDic.Add(DRecord.LINK.ToString(), sps1);
-            sps1 = new SearchParsStruct();
-            sps1.start = @"<div class=""pod-entry__author"">";
-            sps1.end = @"</div>";
+            sps1 = new List<SearchParsStruct>()
+            { new SearchParsStruct(){
+            start = @"<div class=""pod-entry__author"">",
+            end = @"</div>"} };
             spsDic.Add(DRecord.AUTHOR.ToString(), sps1);
             sps.recordDef = spsDic;
 
             sPars.Add(sps);
-            dataSearchPars = new Dictionary<string, List<SearchParsStruct>>();
-            dataSearchPars.Add("default", sPars);
-            ppc.dataSearchPars = dataSearchPars;
+            ppc.dataSearchPars = sPars;
 
             defaultRecordValuePars
                 = new Dictionary<string, List<SearchParsStruct>>();
@@ -331,21 +335,21 @@ namespace Sample
             sps.end = @"</a>";
 
             spsDic
-                = new Dictionary<string, SearchParsStruct>();
-            sps1 = new SearchParsStruct();
-            sps1.start = @""">";
-            sps1.end = @"";
+                = new Dictionary<string, List<SearchParsStruct>>();
+            sps1 = new List<SearchParsStruct>()
+            { new SearchParsStruct(){
+            start = @""">",
+            end = @""} };
             spsDic.Add(DRecord.BOOK.ToString(), sps1);
-            sps1 = new SearchParsStruct();
-            sps1.start = @"<a href=""";
-            sps1.end = @""">";
+            sps1 = new List<SearchParsStruct>()
+            { new SearchParsStruct(){
+            start = @"<a href=""",
+            end = @""">"} };
             spsDic.Add(DRecord.LINK.ToString(), sps1);
             sps.recordDef = spsDic;
 
             sPars.Add(sps);
-            dataSearchPars = new Dictionary<string, List<SearchParsStruct>>();
-            dataSearchPars.Add("default", sPars);
-            ppc.dataSearchPars = dataSearchPars;
+            ppc.dataSearchPars = sPars;
 
             defaultRecordValuePars
                 = new Dictionary<string, List<SearchParsStruct>>();
@@ -366,25 +370,26 @@ namespace Sample
             sps.end = @"<div class=""flex justify-end";
 
             spsDic
-                = new Dictionary<string, SearchParsStruct>();
-            sps1 = new SearchParsStruct();
-            sps1.start = @"title"">        ";
-            sps1.end = @"      </h3>";
+                = new Dictionary<string, List<SearchParsStruct>>();
+            sps1 = new List<SearchParsStruct>()
+            { new SearchParsStruct(){
+            start = @"title"">        ",
+            end = @"      </h3>"} };
             spsDic.Add(DRecord.BOOK.ToString(), sps1);
-            sps1 = new SearchParsStruct();
-            sps1.start = @"href=""";
-            sps1.end = @"""      target=""_blank""      wire:key=""pdf""    >PDF";
+            sps1 = new List<SearchParsStruct>()
+            { new SearchParsStruct(){
+            start = @"href=""",
+            end = @"""      target=""_blank""      wire:key=""pdf""    >PDF"} };
             spsDic.Add(DRecord.LINK.ToString(), sps1);
-            sps1 = new SearchParsStruct();
-            sps1.start = @" >";
-            sps1.end = @"</a>";
+            sps1 = new List<SearchParsStruct>()
+            { new SearchParsStruct(){
+            start = @" >",
+            end = @"</a>"} };
             spsDic.Add(DRecord.AUTHOR.ToString(), sps1);
             sps.recordDef = spsDic;
 
             sPars.Add(sps);
-            dataSearchPars = new Dictionary<string, List<SearchParsStruct>>();
-            dataSearchPars.Add("default", sPars);
-            ppc.dataSearchPars = dataSearchPars;
+            ppc.dataSearchPars = sPars;
 
             defaultRecordValuePars
                 = new Dictionary<string, List<SearchParsStruct>>();
@@ -405,25 +410,26 @@ namespace Sample
             sps.end = @"</hgroup>";
 
             spsDic
-                = new Dictionary<string, SearchParsStruct>();
-            sps1 = new SearchParsStruct();
-            sps1.start = @"title"">        ";
-            sps1.end = @"      </h3>";
+                = new Dictionary<string, List<SearchParsStruct>>();
+            sps1 = new List<SearchParsStruct>()
+            { new SearchParsStruct(){
+            start = @"title"">        ",
+            end = @"      </h3>"} };
             spsDic.Add(DRecord.BOOK.ToString(), sps1);
-            sps1 = new SearchParsStruct();
-            sps1.start = @"href=""";
-            sps1.end = @"""";
+            sps1 = new List<SearchParsStruct>()
+            { new SearchParsStruct(){
+            start = @"href=""",
+            end = @""""} };
             spsDic.Add(DRecord.LINK.ToString(), sps1);
-            sps1 = new SearchParsStruct();
-            sps1.start = @"wire:navigate        >";
-            sps1.end = @"</a>";
+            sps1 = new List<SearchParsStruct>()
+            { new SearchParsStruct(){
+            start = @"wire:navigate        >",
+            end = @"</a>"} };
             spsDic.Add(DRecord.AUTHOR.ToString(), sps1);
             sps.recordDef = spsDic;
 
             sPars.Add(sps);
-            dataSearchPars = new Dictionary<string, List<SearchParsStruct>>();
-            dataSearchPars.Add("default", sPars);
-            ppc.dataSearchPars = dataSearchPars;
+            ppc.dataSearchPars = sPars;
 
             defaultRecordValuePars
                 = new Dictionary<string, List<SearchParsStruct>>();
@@ -471,66 +477,6 @@ namespace Sample
 
         private async void btnYouTube_Click(object sender, EventArgs e)
         {
-            panel1.Enabled = false;
-            string url =
-                "https://www.youtube.com/c/amaravatibuddhistmonastery";
-            PageParserConfig ppc = new PageParserConfig();
-
-            HttpClientDownloader hcd = new HttpClientDownloader();
-            string htmlStr =
-                await hcd.GetHtmlStringAsync(url, ppc.Encoding);
-
-            List<SearchParsStruct> sPars = new List<SearchParsStruct>();
-            SearchParsStruct sps;
-            sps = new SearchParsStruct();
-            sps.start = @"{""title"":{""runs"":[{""text"":""Videos"",""navigationEndpoint"":";
-            sps.end = @"""apiUrl"":""/youtubei/v1/browse""}}";
-            sPars.Add(sps);
-            sps = new SearchParsStruct();
-            sps.start = @"""commandMetadata"":{""webCommandMetadata"":{""url"":""";
-            sps.end = @""",""";
-            sPars.Add(sps);
-
-            string vediosUrl = "https://www.youtube.com"
-                + htmlParserTool.findOne(htmlStr, sPars);
-            htmlStr =
-                await hcd.GetHtmlStringAsync(vediosUrl, ppc.Encoding);
-
-            sPars = new List<SearchParsStruct>();
-            sps = new SearchParsStruct(true);
-            sps.start = @"{""richItemRenderer"":{""content"":{""videoRenderer"":{""videoId"":""";
-            sps.end = @"""trackingParams"":""";
-            sPars.Add(sps);
-
-            List<string> retList = htmlParserTool.findList(htmlStr, sPars);
-
-            Dictionary<string, SearchParsStruct> spsDic
-                = new Dictionary<string, SearchParsStruct>();
-            sps = new SearchParsStruct();
-            sps.start = @"""title"":{""runs"":[{""text"":""";
-            sps.end = @"}],""";
-            spsDic.Add("title", sps);
-            sps = new SearchParsStruct();
-            sps.start = @"""commandMetadata"":{""webCommandMetadata"":{""url"":""";
-            sps.end = @""",""";
-            spsDic.Add("url", sps);
-
-            List<Dictionary<string, string>> vRecords
-                = new List<Dictionary<string, string>>();
-            foreach (string s in retList)
-            {
-                vRecords.Add(htmlParserTool.findMuti(s, spsDic));
-            }
-
-            textBox1.Text = "Total count: " + retList.Count + "\r\n";
-            foreach (Dictionary<string, string> vDic in vRecords)
-            {
-                textBox1.Text += vDic["title"] + "; " + vDic["url"] + "\r\n";
-            }
-
-            writeToXlsx(vRecords);
-
-            panel1.Enabled = true;
         }
 
         Workbook workbook;
@@ -541,7 +487,7 @@ namespace Sample
             foreach (Dictionary<string, string> vDic in vRecords)
             {
                 workbook.WS.Down();
-                foreach (string s in PageScraper.RecordFields)
+                foreach (string s in PageParserConfig.RecordFields)
                 {
                     workbook.WS.Value(vDic[s]);
                 }
@@ -716,7 +662,7 @@ namespace Sample
 
             workbook = new Workbook("LinkSearcher.xlsx", "Sheet1");
 
-            foreach (string s in PageScraper.RecordFields)
+            foreach (string s in PageParserConfig.RecordFields)
             {
                 workbook.WS.Value(s, BasicStyles.Bold);
             }

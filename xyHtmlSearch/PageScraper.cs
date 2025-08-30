@@ -31,7 +31,7 @@ namespace xyHtmlSearch
             else
             {
                 DefaultRecord = new Dictionary<string, string>();
-                foreach (string field in RecordFields)
+                foreach (string field in PageParserConfig.RecordFields)
                 {
                     DefaultRecord.Add(field, "");
                 }
@@ -54,39 +54,36 @@ namespace xyHtmlSearch
             }
 
             //parse data
-            foreach (string dType in ppc.dataSearchPars.Keys)
+            List<string> dataList =
+                htmlParserTool.findList(htmlStr, ppc.dataSearchPars);
+
+            if (ppc.dataSearchPars.Last().recordDef != null)
             {
-                List<string> dataList =
-                    htmlParserTool.findList(htmlStr, ppc.dataSearchPars[dType]);
-
-                if (ppc.dataSearchPars[dType].Last().recordDef != null)
+                //search record
+                Dictionary<string, List<SearchParsStruct>> recordDef
+                    = ppc.dataSearchPars.Last().recordDef;
+                List<Dictionary<string, string>> recordList
+                    = new List<Dictionary<string, string>>();
+                foreach (string data in dataList)
                 {
-                    //search record
-                    Dictionary<string, SearchParsStruct> recordDef
-                        = ppc.dataSearchPars[dType].Last().recordDef;
-                    List<Dictionary<string, string>> recordList
-                        = new List<Dictionary<string, string>>();
-                    foreach (string data in dataList)
-                    {
-                        Dictionary<string, string> recordDic
-                            = [];
+                    Dictionary<string, string> recordDic
+                        = [];
 
-                        recordList.Add(htmlParserTool.findMuti(data, recordDef));
-                    }
+                    recordList.Add(htmlParserTool.findMuti(data, recordDef));
+                }
 
-                    foreach(string key in DefaultRecord.Keys)
+                foreach(string key in DefaultRecord.Keys)
+                {
+                    foreach(Dictionary<string,string> record in recordList)
                     {
-                        foreach(Dictionary<string,string> record in recordList)
+                        if (!record.ContainsKey(key))
                         {
-                            if (!record.ContainsKey(key))
-                            {
-                                record.Add(key, DefaultRecord[key]);
-                            }
+                            record.Add(key, DefaultRecord[key]);
                         }
                     }
-
-                    ScrapReport.reportRecordList(progress, recordList);
                 }
+
+                ScrapReport.reportRecordList(progress, recordList);
             }
 
             List<string> urlList = null;
@@ -159,7 +156,6 @@ namespace xyHtmlSearch
             DefaultRecordStack.Clear();
         }
 
-        public static List<string> RecordFields;
         public static Stack<
             (Dictionary<string, string> r, int l)
             > DefaultRecordStack = [];
