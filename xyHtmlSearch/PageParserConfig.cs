@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace xyHtmlSearch
 {
-    public class PageParserConfig
+    public class PageParserConfig : INotifyPropertyChanged
     {
         //Page encoding
         public string encoding = "utf-8";
@@ -23,11 +25,22 @@ namespace xyHtmlSearch
         public bool isDefaultRecordLocal = false;
 
         public UrlMatchingType urlMatchingType = UrlMatchingType.startWith;
-        public string modelID = "";
+        private string modelID = "";
+        public string ModelID { get => modelID; set {
+                modelID = value; 
+                OnPropertyChanged(nameof(ModelID));
+            }  
+        }
         public List<string> matchUrls;
         public List<string> StartUrls;
         public List<(string start, string end)> StartEndUrls;
 
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, 
+                new PropertyChangedEventArgs(propertyName));
+        }
 
         public static List<string> RecordFields; //Definition of a search record
 
@@ -53,6 +66,23 @@ namespace xyHtmlSearch
                 return allConfigs;
             }
         }
+
+        public static void Save()
+        {
+            JsonObject newCfg = new JsonObject();
+            newCfg[cnFields] = new JsonArray();
+            newCfg[cnUrlModels] = new JsonArray();
+            foreach (string field in RecordFields)
+            {
+                newCfg[cnFields].AsArray().Add(field);
+            }
+            foreach (PageParserConfig ppc in allConfigs)
+            {
+                newCfg[cnUrlModels].AsArray().Add(toJson(ppc));
+            }
+            string jsonString = JsonSerializer.Serialize(newCfg);
+            File.WriteAllText(configFile, jsonString);
+        }
         public static void init(string cFile = "xySearch.cfg")
         {
             configFile = cFile;
@@ -74,15 +104,15 @@ namespace xyHtmlSearch
             }
 
             //RecordFields
-            JsonArray RfJa = rootJo[cnFields].GetValue<JsonArray>();
+            JsonArray RfJa = rootJo[cnFields].AsArray();
             RecordFields = new List<string>();
-            foreach (JsonObject fieldJo in RfJa)
+            foreach (JsonValue fieldJo in RfJa)
             {
                 RecordFields.Add(fieldJo.GetValue<string>());
             }
 
             //urlModels
-            JsonArray UmJa = rootJo[cnUrlModels].GetValue<JsonArray>();
+            JsonArray UmJa = rootJo[cnUrlModels].AsArray();
             allConfigs = new List<PageParserConfig>();
             foreach (JsonObject ppcJo in UmJa)
             {
@@ -94,10 +124,43 @@ namespace xyHtmlSearch
         {
             PageParserConfig retPpc = new PageParserConfig();
             //encoding
-            if (ppcJo.ContainsKey(cnEncoding))
+            retPpc.encoding = ppcJo[cnEncoding].GetValue<string>();
+            retPpc.ModelID = ppcJo[cnModelID].GetValue<string>();
+
+            retPpc.urlMatchingType =
+                (UrlMatchingType)Enum.Parse(
+                    typeof(UrlMatchingType),
+                    ppcJo[cnMatchType].GetValue<string>());
+            switch (retPpc.urlMatchingType)
             {
-                retPpc.encoding = ppcJo[cnEncoding].GetValue<string>();
+                case UrlMatchingType.exact:
+                    JsonArray emJa = ppcJo[cnExact].AsArray();
+                    retPpc.matchUrls = new List<string>();
+                    foreach (JsonValue mu in emJa)
+                    {
+                        retPpc.matchUrls.Add(mu.GetValue<string>());
+                    }
+                    break;
+                case UrlMatchingType.startWith: 
+                    JsonArray swJa = ppcJo[cnStartWith].AsArray();
+                    retPpc.StartUrls = new List<string>();
+                    foreach (JsonValue mu in swJa)
+                    {
+                        retPpc.StartUrls.Add(mu.GetValue<string>());
+                    }
+                    break;
+                case UrlMatchingType.startAndEndWith:
+                    JsonArray seJa = ppcJo[cnStartEnd].AsArray();
+                    retPpc.StartEndUrls = new List<(string start, string end)>();
+                    foreach (JsonObject seJo in seJa)
+                    {
+                        retPpc.StartEndUrls.Add((
+                            seJo[cnStart].GetValue<string>(),
+                            seJo[cnEnd].GetValue<string>()));
+                    }
+                    break;
             }
+
             //urlPars
             if (ppcJo.ContainsKey(cnUrlPar))
             {
@@ -116,7 +179,42 @@ namespace xyHtmlSearch
         static public JsonObject toJson(PageParserConfig ppc)
         {
             JsonObject retJo= new JsonObject();
-            
+
+            retJo[cnModelID] = ppc.ModelID;
+            retJo[cnEncoding] = ppc.Encoding;
+
+            retJo[cnMatchType] = ppc.urlMatchingType.ToString();
+            JsonArray muJa;
+            switch (ppc.urlMatchingType)
+            {
+                case UrlMatchingType.exact:
+                    muJa = new JsonArray();
+                    foreach (string mu in ppc.matchUrls)
+                    {
+                        muJa.Add(mu);
+                    }
+                    retJo[cnExact] = muJa;
+                    break;
+                case UrlMatchingType.startWith:
+                    muJa = new JsonArray();
+                    foreach (string mu in ppc.StartUrls)
+                    {
+                        muJa.Add(mu);
+                    }
+                    retJo[cnStartWith] = muJa;
+                    break;
+                case UrlMatchingType.startAndEndWith:
+                    muJa = new JsonArray();
+                    foreach ((string start, string end) in ppc.StartEndUrls)
+                    {
+                        JsonObject seJo = new JsonObject();
+                        seJo[cnStart] = start;
+                        seJo[cnEnd] = end;
+                        muJa.Add(seJo);
+                    }
+                    retJo[cnStartEnd] = muJa;
+                    break;
+            }
 
             return retJo;
         }
@@ -126,10 +224,16 @@ namespace xyHtmlSearch
         public static string cnFields = "fields";
         public static string cnUrlModels = "urlModels";
         public static string cnModelID = "mID";
+        public static string cnEncoding = "encoding";
+        public static string cnMatchType = "UrlMatchingType";
+        public static string cnExact = "ExactMatchingList";
+        public static string cnStartWith = "StartMatchingList";
+        public static string cnStartEnd = "StartEndMatchingList";
+
         public static string cnUrlPar = "urlPar";
+
         public static string cnStart = "start";
         public static string cnEnd = "end";
-        public static string cnEncoding = "encoding";
 
         #endregion
     }
