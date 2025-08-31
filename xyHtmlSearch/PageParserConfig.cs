@@ -16,8 +16,7 @@ namespace xyHtmlSearch
         public string encoding = "utf-8";
         public string Encoding { get => encoding; set => encoding = value; }
 
-        public List<SearchParsStruct> dataSearchPars
-            = new List<SearchParsStruct>();
+        public List<SearchParsStruct> dataSearchPars;
 
         public List<SearchParsStruct> urlSearchPars;
 
@@ -127,6 +126,7 @@ namespace xyHtmlSearch
             retPpc.encoding = ppcJo[cnEncoding].GetValue<string>();
             retPpc.ModelID = ppcJo[cnModelID].GetValue<string>();
 
+            //urlMatchingType
             retPpc.urlMatchingType =
                 (UrlMatchingType)Enum.Parse(
                     typeof(UrlMatchingType),
@@ -164,14 +164,18 @@ namespace xyHtmlSearch
             //urlPars
             if (ppcJo.ContainsKey(cnUrlPar))
             {
-                JsonArray urlParJa = ppcJo[cnUrlPar].GetValue<JsonArray>();
+                JsonArray urlParJa = ppcJo[cnUrlPar].AsArray();
                 retPpc.urlSearchPars = new List<SearchParsStruct>();
                 foreach (JsonObject spJo in urlParJa)
                 {
-                    //retPpc.urlSearchPars.Add(
-                    //    SearchParsStruct.fromJson(spJo));
+                    retPpc.urlSearchPars.Add(
+                        SearchParsStruct.fromJson(spJo));
                 }
             }
+
+            //dataSearchPars
+
+            //defaultRecordValuePars
 
             return retPpc;
         }
@@ -183,6 +187,7 @@ namespace xyHtmlSearch
             retJo[cnModelID] = ppc.ModelID;
             retJo[cnEncoding] = ppc.Encoding;
 
+            //urlMatchingType
             retJo[cnMatchType] = ppc.urlMatchingType.ToString();
             JsonArray muJa;
             switch (ppc.urlMatchingType)
@@ -216,6 +221,21 @@ namespace xyHtmlSearch
                     break;
             }
 
+            //urlPars
+            if (ppc.urlSearchPars != null)
+            {
+                JsonArray upJa = new JsonArray();
+                foreach (SearchParsStruct sps in ppc.urlSearchPars)
+                {
+                    upJa.Add(SearchParsStruct.toJson(sps));
+                }
+                retJo[cnUrlPar] = upJa;
+            }
+
+            //dataSearchPars
+
+            //defaultRecordValuePars
+
             return retJo;
         }
 
@@ -234,6 +254,11 @@ namespace xyHtmlSearch
 
         public static string cnStart = "start";
         public static string cnEnd = "end";
+        public static string cnSearchList = "searchList";
+        public static string cnRecordDef = "recordDef";
+        public static string cnAddBefore = "addBefore";
+        public static string cnAddAfter = "addAfter";
+        public static string cnCnd = "constant";
 
         #endregion
     }

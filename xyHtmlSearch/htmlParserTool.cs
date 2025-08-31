@@ -1,4 +1,8 @@
 ﻿using System;
+using System.IO;
+using System.Reflection.Metadata;
+using System.Text;
+using System.Text.Json.Nodes;
 using System.Web;
 
 namespace xyHtmlSearch
@@ -288,7 +292,7 @@ namespace xyHtmlSearch
         }
 
     }
-    public struct SearchParsStruct
+    public class SearchParsStruct
     {
         public SearchParsStruct(bool searchList = false)
         {
@@ -305,5 +309,91 @@ namespace xyHtmlSearch
         public string addAfter;
 
         public string constant; //If this variable is not null, the other variables are meaningless.
+        
+        static public SearchParsStruct fromJson(JsonObject spsJo)
+        {
+            SearchParsStruct retSps = new SearchParsStruct();
+
+            if (spsJo[PageParserConfig.cnStart] != null) {
+                retSps.start = spsJo[PageParserConfig.cnStart].GetValue<string>();
+            }
+            if (spsJo[PageParserConfig.cnEnd] != null) {
+                retSps.end = spsJo[PageParserConfig.cnEnd].GetValue<string>();
+            }
+            if (spsJo[PageParserConfig.cnSearchList] != null) {
+                retSps.searchList = spsJo[PageParserConfig.cnSearchList].GetValue<bool>();
+            }
+            if (spsJo[PageParserConfig.cnRecordDef] != null)
+            {
+                retSps.recordDef = new Dictionary<string, List<SearchParsStruct>>();
+                JsonObject rdJo = spsJo[PageParserConfig.cnRecordDef].AsObject();
+                foreach (var property in rdJo)
+                {
+                    JsonArray spJa = property.Value.AsArray();
+                    List<SearchParsStruct> spList = new List<SearchParsStruct>();
+                    foreach (JsonObject spJo in spJa)
+                    {
+                        spList.Add(fromJson(spJo));
+                    }
+                    retSps.recordDef.Add(property.Key, spList);
+                }
+            }
+            if (spsJo[PageParserConfig.cnAddBefore] != null) {
+                retSps.addBefore = spsJo[PageParserConfig.cnAddBefore].GetValue<string>();
+            }
+            if (spsJo[PageParserConfig.cnAddAfter] != null) {
+                retSps.addAfter = spsJo[PageParserConfig.cnAddAfter].GetValue<string>();
+            }
+            if (spsJo[PageParserConfig.cnCnd] != null) {
+                retSps.constant = spsJo[PageParserConfig.cnCnd].GetValue<string>();
+            }
+            return retSps;
+        }
+
+        static public JsonObject toJson(SearchParsStruct sps)
+        {
+            JsonObject retJo = new JsonObject();
+
+            if(sps.start != null && sps.start != "")
+            {
+                retJo[PageParserConfig.cnStart] =sps.start;
+            }
+            if (sps.end != null && sps.end != "")
+            {
+                retJo[PageParserConfig.cnEnd] = sps.end;
+            }
+            if (sps.searchList)
+            {
+                retJo[PageParserConfig.cnSearchList] = sps.searchList;
+            }
+            if (sps.recordDef != null)
+            {
+                JsonObject rdJo = new JsonObject();
+                foreach (string key in sps.recordDef.Keys)
+                {
+                    JsonArray spJa = new JsonArray();
+                    foreach (SearchParsStruct sp in sps.recordDef[key])
+                    {
+                        spJa.Add(toJson(sp));
+                    }
+                    rdJo[key] = spJa;
+                }
+                retJo[PageParserConfig.cnRecordDef] = rdJo;
+            }
+            if (sps.addBefore != null && sps.addBefore != "")
+            {
+                retJo[PageParserConfig.cnAddBefore] = sps.addBefore;
+            }
+            if (sps.addAfter != null && sps.addAfter != "")
+            {
+                retJo[PageParserConfig.cnAddAfter] = sps.addAfter;
+            }
+            if (sps.constant != null && sps.constant != "")
+            {
+                retJo[PageParserConfig.cnCnd] = sps.constant;
+            }
+
+            return retJo;
+        }
     }
 }
