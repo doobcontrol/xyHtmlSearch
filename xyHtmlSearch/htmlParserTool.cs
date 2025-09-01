@@ -344,8 +344,8 @@ namespace xyHtmlSearch
             if (spsJo[PageParserConfig.cnAddAfter] != null) {
                 retSps.addAfter = spsJo[PageParserConfig.cnAddAfter].GetValue<string>();
             }
-            if (spsJo[PageParserConfig.cnCnd] != null) {
-                retSps.constant = spsJo[PageParserConfig.cnCnd].GetValue<string>();
+            if (spsJo[PageParserConfig.cnConstant] != null) {
+                retSps.constant = spsJo[PageParserConfig.cnConstant].GetValue<string>();
             }
             return retSps;
         }
@@ -390,7 +390,7 @@ namespace xyHtmlSearch
             }
             if (sps.constant != null && sps.constant != "")
             {
-                retJo[PageParserConfig.cnCnd] = sps.constant;
+                retJo[PageParserConfig.cnConstant] = sps.constant;
             }
 
             return retJo;

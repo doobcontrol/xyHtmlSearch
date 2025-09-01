@@ -174,6 +174,16 @@ namespace xyHtmlSearch
             }
 
             //dataSearchPars
+            if(ppcJo.ContainsKey(cnDataPar))
+            {
+                JsonArray dataParJa = ppcJo[cnDataPar].AsArray();
+                retPpc.dataSearchPars = new List<SearchParsStruct>();
+                foreach (JsonObject spJo in dataParJa)
+                {
+                    retPpc.dataSearchPars.Add(
+                        SearchParsStruct.fromJson(spJo));
+                }
+            }
 
             //defaultRecordValuePars
 
@@ -233,6 +243,15 @@ namespace xyHtmlSearch
             }
 
             //dataSearchPars
+            if (ppc.dataSearchPars != null)
+            {
+                JsonArray dpJa = new JsonArray();
+                foreach (SearchParsStruct sps in ppc.dataSearchPars)
+                {
+                    dpJa.Add(SearchParsStruct.toJson(sps));
+                }
+                retJo[cnDataPar] = dpJa;
+            }
 
             //defaultRecordValuePars
 
@@ -251,6 +270,7 @@ namespace xyHtmlSearch
         public static string cnStartEnd = "StartEndMatchingList";
 
         public static string cnUrlPar = "urlPar";
+        public static string cnDataPar = "dataPar";
 
         public static string cnStart = "start";
         public static string cnEnd = "end";
@@ -258,7 +278,7 @@ namespace xyHtmlSearch
         public static string cnRecordDef = "recordDef";
         public static string cnAddBefore = "addBefore";
         public static string cnAddAfter = "addAfter";
-        public static string cnCnd = "constant";
+        public static string cnConstant = "constant";
 
         #endregion
     }
