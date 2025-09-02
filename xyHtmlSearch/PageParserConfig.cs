@@ -186,6 +186,23 @@ namespace xyHtmlSearch
             }
 
             //defaultRecordValuePars
+            if(ppcJo.ContainsKey(cnDefaultPar))
+            {
+                JsonObject drJo = ppcJo[cnDefaultPar].AsObject();
+                retPpc.defaultRecordValuePars
+                    = new Dictionary<string, List<SearchParsStruct>>();
+                foreach (var item in drJo)
+                {
+                    JsonArray spJa = item.Value.AsArray();
+                    List<SearchParsStruct> spsList
+                        = new List<SearchParsStruct>();
+                    foreach (JsonObject spJo in spJa)
+                    {
+                        spsList.Add(SearchParsStruct.fromJson(spJo));
+                    }
+                    retPpc.defaultRecordValuePars.Add(item.Key, spsList);
+                }
+            }
 
             return retPpc;
         }
@@ -254,6 +271,20 @@ namespace xyHtmlSearch
             }
 
             //defaultRecordValuePars
+            if (ppc.defaultRecordValuePars != null)
+            {
+                JsonObject drJo = new JsonObject();
+                foreach (string field in ppc.defaultRecordValuePars.Keys)
+                {
+                    JsonArray spJa = new JsonArray();
+                    foreach (SearchParsStruct sps in ppc.defaultRecordValuePars[field])
+                    {
+                        spJa.Add(SearchParsStruct.toJson(sps));
+                    }
+                    drJo[field] = spJa;
+                }
+                retJo[cnDefaultPar] = drJo;
+            }
 
             return retJo;
         }
@@ -271,6 +302,7 @@ namespace xyHtmlSearch
 
         public static string cnUrlPar = "urlPar";
         public static string cnDataPar = "dataPar";
+        public static string cnDefaultPar = "defaultRecordValuePars";
 
         public static string cnStart = "start";
         public static string cnEnd = "end";
