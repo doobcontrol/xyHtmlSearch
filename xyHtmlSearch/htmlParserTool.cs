@@ -315,8 +315,17 @@ namespace xyHtmlSearch
             if (spsJo[PageParserConfig.cnStart] != null) {
                 retSps.start = spsJo[PageParserConfig.cnStart].GetValue<string>();
             }
-            if (spsJo[PageParserConfig.cnEnd] != null) {
+            else
+            {
+                retSps.start = "";
+            }
+            if (spsJo[PageParserConfig.cnEnd] != null)
+            {
                 retSps.end = spsJo[PageParserConfig.cnEnd].GetValue<string>();
+            }
+            else
+            {
+                retSps.end = "";
             }
             if (spsJo[PageParserConfig.cnSearchList] != null) {
                 retSps.searchList = spsJo[PageParserConfig.cnSearchList].GetValue<bool>();
