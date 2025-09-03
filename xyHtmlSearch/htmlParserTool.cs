@@ -224,9 +224,7 @@ namespace xyHtmlSearch
 
             foreach( string s in spsDic.Keys)
             {
-                string tempStr = finishHandle(
-                    findOne(strForFind, spsDic[s]),
-                    spsDic[s].Last());
+                string tempStr = findOne(strForFind, spsDic[s]);
                 retDic.Add(s, tempStr);
             }
             return retDic;
