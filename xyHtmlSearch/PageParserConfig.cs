@@ -47,7 +47,40 @@ namespace xyHtmlSearch
             = new Dictionary<string, PageParserConfig>();
         public static PageParserConfig get(string url)
         {
-            return ppcDic[nameParser(url)];
+            PageParserConfig retPpc = null;
+
+            foreach (PageParserConfig ppc in AllConfigs)
+            {
+                if (ppc.urlMatchingType == UrlMatchingType.exact
+                    && ppc.matchUrls.Contains(url))
+                {
+                    return ppc;
+                }
+            }
+            foreach (PageParserConfig ppc in AllConfigs)
+            {
+                if (ppc.urlMatchingType == UrlMatchingType.startAndEndWith)
+                {
+                    foreach((string start, string end) in ppc.StartEndUrls)
+                    {
+                        if (url.StartsWith(start) && url.EndsWith(end))
+                        {
+                            return ppc;
+                        }
+                    }
+                }
+            }
+            foreach (PageParserConfig ppc in AllConfigs)
+            {
+                if (ppc.urlMatchingType == UrlMatchingType.startWith
+                    && ppc.StartUrls.Contains(url)
+                    
+                    )
+                {
+                    return ppc;
+                }
+            }
+            return retPpc;
         }
         public static nameParser nameParser;
 
