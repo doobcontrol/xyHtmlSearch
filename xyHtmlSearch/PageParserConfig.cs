@@ -72,12 +72,15 @@ namespace xyHtmlSearch
             }
             foreach (PageParserConfig ppc in AllConfigs)
             {
-                if (ppc.urlMatchingType == UrlMatchingType.startWith
-                    && ppc.StartUrls.Contains(url)
-                    
-                    )
+                if (ppc.urlMatchingType == UrlMatchingType.startWith)
                 {
-                    return ppc;
+                    foreach (string start in ppc.StartUrls)
+                    {
+                        if (url.StartsWith(start))
+                        {
+                            return ppc;
+                        }
+                    }
                 }
             }
             return retPpc;

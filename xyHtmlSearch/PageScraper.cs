@@ -54,11 +54,12 @@ namespace xyHtmlSearch
             }
 
             //parse data
-            List<string> dataList =
-                htmlParserTool.findList(htmlStr, ppc.dataSearchPars);
-
-            if (ppc.dataSearchPars.Last().recordDef != null)
+            if (ppc.dataSearchPars != null
+                && ppc.dataSearchPars.Last().recordDef != null)
             {
+                List<string> dataList =
+                    htmlParserTool.findList(htmlStr, ppc.dataSearchPars);
+
                 //search record
                 Dictionary<string, List<SearchParsStruct>> recordDef
                     = ppc.dataSearchPars.Last().recordDef;
