@@ -17,6 +17,12 @@ namespace xyHtmlSearch
             IProgress<ScrapReport> progress)
         {
             PageParserConfig ppc = PageParserConfig.get(url);
+
+            if (ppc == null)
+            {
+                throw new Exception("No parser model config for url: " + url);
+            }
+
             string htmlStr =
                 await hcd.GetHtmlStringAsync(url, ppc.Encoding);
             htmlStr = htmlStr.Replace("\r", "").Replace("\n", "");
