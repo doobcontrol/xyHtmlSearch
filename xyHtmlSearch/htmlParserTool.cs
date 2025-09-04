@@ -144,7 +144,9 @@ namespace xyHtmlSearch
                 }
                 else
                 {
-                    retStr = findBetween(retStr, sps.start, sps.end);
+                    retStr = findBetween(retStr, 
+                        (sps.start == null) ? "": sps.start, 
+                        (sps.end == null) ? "" : sps.end);
                 }
             }
             retStr = finishHandle(retStr, sPars.Last());
@@ -168,12 +170,16 @@ namespace xyHtmlSearch
                     if (sps.searchList)
                     {
                         retList = 
-                            findAllBetween(searchStr, sps.start, sps.end);
+                            findAllBetween(searchStr,
+                                (sps.start == null) ? "" : sps.start,
+                                (sps.end == null) ? "" : sps.end);
                     }
                     else
                     {
                         searchStr = 
-                            findBetween(searchStr, sps.start, sps.end);
+                            findBetween(searchStr,
+                                (sps.start == null) ? "" : sps.start,
+                                (sps.end == null) ? "" : sps.end);
                     }
                 }
                 else
@@ -184,7 +190,9 @@ namespace xyHtmlSearch
                         foreach (string s in retList)
                         {
                             tempList.AddRange(
-                                findAllBetween(s, sps.start, sps.end));
+                                findAllBetween(s,
+                                    (sps.start == null) ? "" : sps.start,
+                                    (sps.end == null) ? "" : sps.end));
                         }
                         retList = tempList;
                     }
@@ -193,7 +201,9 @@ namespace xyHtmlSearch
                         List<string> tempList = new List<string>();
                         foreach (string s in retList)
                         {
-                            tempList.Add(findBetween(s, sps.start, sps.end));
+                            tempList.Add(findBetween(s,
+                                (sps.start == null) ? "" : sps.start,
+                                (sps.end == null) ? "" : sps.end));
                         }
                         retList = tempList;
                     }
