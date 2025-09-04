@@ -141,14 +141,17 @@ namespace xyHtmlSearch
                 }
                 catch (Exception ex)
                 {
+                    ScrapReport.reportPageDone(progress,
+                        (url, "failed", false));
                     ScrapReport.reportError(progress, "Scrap failed: " + url, ex);
                     continue;
                 }
                 ScrapReport.reportPageDone(progress,
-                    (url, "", true));
+                    (url, "succeed", true));
                 if (newList != null)
                 {
                     pushUrlList(uStack, newList, level + 1);
+                    ScrapReport.reportNewUrlsCount(progress, newList.Count);
                 }
                 if (uStack.Count == 0)
                 {

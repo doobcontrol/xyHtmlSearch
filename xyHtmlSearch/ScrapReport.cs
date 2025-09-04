@@ -18,6 +18,7 @@ namespace xyHtmlSearch
             FileStart,
             FileDone,
             RecordList,
+            NewUrlsCount,
             Error
         }
 
@@ -34,6 +35,7 @@ namespace xyHtmlSearch
         internal (string fileUrl, bool succeed) fileRusult;
 
         private List<Dictionary<string, string>> recordList;
+        private int newUrlsCount = 0;
 
         public rType ReportType { get => reportType; }
         public string Msg { get => msg; }
@@ -45,6 +47,7 @@ namespace xyHtmlSearch
         public string PageUrl { get => pageUrl; set => pageUrl = value; }
         public (string pageUrl, string configId, bool succeed) PageRusult { get => pageRusult; set => pageRusult = value; }
         public List<Dictionary<string, string>> RecordList { get => recordList; set => recordList = value; }
+        public int NewUrlsCount { get => newUrlsCount; set => newUrlsCount = value; }
 
         static public void reportMsg(IProgress<ScrapReport> progress, string msg)
         {
@@ -128,6 +131,16 @@ namespace xyHtmlSearch
             {
                 reportType = rType.RecordList,
                 recordList = recordList
+            });
+        }
+        static public void reportNewUrlsCount(IProgress<ScrapReport> progress,
+            int newUrlsCount)
+        {
+            progress.Report(new ScrapReport()
+            {
+                reportType = rType.NewUrlsCount,
+                newUrlsCount = newUrlsCount,
+                msg = $"Found {newUrlsCount} new urls."
             });
         }
     }
