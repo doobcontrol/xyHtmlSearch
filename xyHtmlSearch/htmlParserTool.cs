@@ -1,9 +1,10 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Text.Json.Nodes;
-using System.Web;
+using System.Text.RegularExpressions;
 
 namespace xyHtmlSearch
 {
@@ -84,7 +85,7 @@ namespace xyHtmlSearch
             {
                 retStr = strForFind.Substring(startIndex, endIndex - startIndex);
             }
-            return HttpUtility.HtmlDecode(retStr);
+            return retStr;
         }
 
         //find all
@@ -118,7 +119,7 @@ namespace xyHtmlSearch
                 {
                     string tempStr = 
                         strForFind.Substring(retStartIndex, retEndIndex - retStartIndex);                    
-                    retList.Add(HttpUtility.HtmlDecode(tempStr));
+                    retList.Add(tempStr);
                     beginIndex = retEndIndex + endStrLen;
                 }
             }
@@ -243,7 +244,34 @@ namespace xyHtmlSearch
         static private string finishHandle(string fString, SearchParsStruct sps)
         {
             string retStr = fString;
-
+            if(sps.HtmlDecode)
+            {
+                retStr = WebUtility.HtmlDecode(retStr);
+            }
+            if (sps.UrlDecode)
+            {
+                retStr = WebUtility.UrlDecode(retStr);
+            }
+            if(sps.Unescape)
+            {
+                retStr = Regex.Unescape(retStr);
+            }
+            if (sps.frontSplitter != null & sps.frontSplitter != "")
+            {
+                int fsIndex = retStr.IndexOf(sps.frontSplitter);
+                if(fsIndex != -1)
+                {
+                    retStr = retStr.Substring(0, fsIndex);
+                }
+            }
+            if(sps.backSplitter != null & sps.backSplitter != "")
+            {
+                int psIndex = retStr.LastIndexOf(sps.backSplitter);
+                if (psIndex != -1)
+                {
+                    retStr = retStr.Substring(psIndex + sps.backSplitter.Length);
+                }
+            }
             if (sps.addBefore != null)
             {
                 retStr = sps.addBefore + retStr;
@@ -315,6 +343,11 @@ namespace xyHtmlSearch
         //Additional processing
         public string addBefore;
         public string addAfter;
+        public bool UrlDecode = true;
+        public bool HtmlDecode = true;
+        public bool Unescape = true;
+        public string frontSplitter; //Get the part before first occurrence of this string
+        public string backSplitter;  //Get the part after last occurrence of this string
 
         public string constant; //If this variable is not null, the other variables are meaningless.
         
@@ -361,6 +394,21 @@ namespace xyHtmlSearch
             if (spsJo[PageParserConfig.cnAddAfter] != null) {
                 retSps.addAfter = spsJo[PageParserConfig.cnAddAfter].GetValue<string>();
             }
+            if (spsJo[PageParserConfig.cnUrlDecode] != null) {
+                retSps.UrlDecode = spsJo[PageParserConfig.cnUrlDecode].GetValue<bool>();
+            }
+            if (spsJo[PageParserConfig.cnHtmlDecode] != null) {
+                retSps.HtmlDecode = spsJo[PageParserConfig.cnHtmlDecode].GetValue<bool>();
+            }
+            if(spsJo[PageParserConfig.cnUnescape] != null) {
+                retSps.Unescape = spsJo[PageParserConfig.cnUnescape].GetValue<bool>();
+            }
+            if (spsJo[PageParserConfig.cnFrontSplitter] != null) {
+                retSps.frontSplitter = spsJo[PageParserConfig.cnFrontSplitter].GetValue<string>();
+            }
+            if (spsJo[PageParserConfig.cnBackSplitter] != null) {
+                retSps.backSplitter = spsJo[PageParserConfig.cnBackSplitter].GetValue<string>();
+            }
             if (spsJo[PageParserConfig.cnConstant] != null) {
                 retSps.constant = spsJo[PageParserConfig.cnConstant].GetValue<string>();
             }
@@ -404,6 +452,26 @@ namespace xyHtmlSearch
             if (sps.addAfter != null && sps.addAfter != "")
             {
                 retJo[PageParserConfig.cnAddAfter] = sps.addAfter;
+            }
+            if (sps.UrlDecode)
+            {
+                retJo[PageParserConfig.cnUrlDecode] = sps.UrlDecode;
+            }
+            if (sps.HtmlDecode)
+            {
+                retJo[PageParserConfig.cnHtmlDecode] = sps.HtmlDecode;
+            }
+            if(sps.Unescape)
+            {
+                retJo[PageParserConfig.cnUnescape] = sps.Unescape;
+            }
+            if (sps.frontSplitter != null && sps.frontSplitter != "")
+            {
+                retJo[PageParserConfig.cnFrontSplitter] = sps.frontSplitter;
+            }
+            if (sps.backSplitter != null && sps.backSplitter != "")
+            {
+                retJo[PageParserConfig.cnBackSplitter] = sps.backSplitter;
             }
             if (sps.constant != null && sps.constant != "")
             {

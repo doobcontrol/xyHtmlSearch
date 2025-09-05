@@ -346,6 +346,11 @@ namespace xyHtmlSearch
         public static string cnRecordDef = "recordDef";
         public static string cnAddBefore = "addBefore";
         public static string cnAddAfter = "addAfter";
+        public static string cnUrlDecode = "UrlDecode";
+        public static string cnHtmlDecode = "HtmlDecode";
+        public static string cnUnescape = "Unescape";
+        public static string cnFrontSplitter = "frontSplitter";
+        public static string cnBackSplitter = "backSplitter";
         public static string cnConstant = "constant";
 
         #endregion
