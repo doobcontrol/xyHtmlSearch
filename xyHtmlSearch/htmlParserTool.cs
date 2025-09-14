@@ -281,6 +281,14 @@ namespace xyHtmlSearch
                 retStr = retStr + sps.addAfter;
             }
 
+            if(sps.transFunc != null 
+                && sps.transFunc != ""
+                && SearchParsStruct.transFuncDic.ContainsKey(sps.transFunc)
+                )
+            {
+                retStr = SearchParsStruct.transFuncDic[sps.transFunc](retStr);
+            }
+
             return retStr;
         }
 
@@ -351,6 +359,11 @@ namespace xyHtmlSearch
 
         public string constant; //If this variable is not null, the other variables are meaningless.
         
+        public string transFunc;
+
+        static public Dictionary<string, stringTrans> transFuncDic
+            = new Dictionary<string, stringTrans>();
+
         static public SearchParsStruct fromJson(JsonObject spsJo)
         {
             SearchParsStruct retSps = new SearchParsStruct();
@@ -411,6 +424,10 @@ namespace xyHtmlSearch
             }
             if (spsJo[PageParserConfig.cnConstant] != null) {
                 retSps.constant = spsJo[PageParserConfig.cnConstant].GetValue<string>();
+            }
+            if (spsJo[PageParserConfig.cnTransFunc] != null)
+            {
+                retSps.transFunc = spsJo[PageParserConfig.cnTransFunc].GetValue<string>();
             }
             return retSps;
         }
@@ -477,8 +494,12 @@ namespace xyHtmlSearch
             {
                 retJo[PageParserConfig.cnConstant] = sps.constant;
             }
-
+            if (sps.transFunc != null && sps.transFunc != "")
+            {
+                retJo[PageParserConfig.cnTransFunc] = sps.transFunc;
+            }
             return retJo;
         }
     }
+    public delegate string stringTrans(string input);
 }

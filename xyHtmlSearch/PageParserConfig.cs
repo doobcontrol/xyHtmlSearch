@@ -361,6 +361,7 @@ namespace xyHtmlSearch
         public static string cnFrontSplitter = "frontSplitter";
         public static string cnBackSplitter = "backSplitter";
         public static string cnConstant = "constant";
+        public static string cnTransFunc = "transFunc";
 
         #endregion
     }
