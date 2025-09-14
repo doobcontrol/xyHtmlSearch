@@ -18,7 +18,7 @@ namespace xyHtmlSearch
 
         public List<SearchParsStruct> dataSearchPars;
 
-        public List<SearchParsStruct> urlSearchPars;
+        public List<List<SearchParsStruct>> urlSearchPars;
 
         public Dictionary<string, List<SearchParsStruct>> defaultRecordValuePars;
         public bool isDefaultRecordLocal = false;
@@ -201,11 +201,17 @@ namespace xyHtmlSearch
             if (ppcJo.ContainsKey(cnUrlPar))
             {
                 JsonArray urlParJa = ppcJo[cnUrlPar].AsArray();
-                retPpc.urlSearchPars = new List<SearchParsStruct>();
-                foreach (JsonObject spJo in urlParJa)
+                retPpc.urlSearchPars = new List<List<SearchParsStruct>>();
+
+                foreach (JsonArray spJa in urlParJa)
                 {
-                    retPpc.urlSearchPars.Add(
-                        SearchParsStruct.fromJson(spJo));
+                    List<SearchParsStruct> spsList
+                        = new List<SearchParsStruct>();
+                    retPpc.urlSearchPars.Add(spsList);
+                    foreach (JsonObject spJo in spJa)
+                    {
+                        spsList.Add(SearchParsStruct.fromJson(spJo));
+                    }
                 }
             }
 
@@ -287,12 +293,15 @@ namespace xyHtmlSearch
             //urlPars
             if (ppc.urlSearchPars != null)
             {
-                JsonArray upJa = new JsonArray();
-                foreach (SearchParsStruct sps in ppc.urlSearchPars)
+                JsonArray upJas = new JsonArray();
+                foreach (List<SearchParsStruct> sps in ppc.urlSearchPars)
                 {
-                    upJa.Add(SearchParsStruct.toJson(sps));
+                    JsonArray upJa = new JsonArray();
+                    upJas.Add(upJa);
+                    foreach (SearchParsStruct spss in sps)  
+                        upJa.Add(SearchParsStruct.toJson(spss));
                 }
-                retJo[cnUrlPar] = upJa;
+                retJo[cnUrlPar] = upJas;
             }
 
             //dataSearchPars

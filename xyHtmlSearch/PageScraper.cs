@@ -97,8 +97,13 @@ namespace xyHtmlSearch
             if (ppc.urlSearchPars != null)
             {
                 //parse navgate url
-                urlList =
-                        htmlParserTool.findList(htmlStr, ppc.urlSearchPars);
+                urlList = new List<string>();
+                foreach (List<SearchParsStruct> record in ppc.urlSearchPars)
+                {
+                    List<string> uList =
+                        htmlParserTool.findList(htmlStr, record);
+                    urlList.AddRange(uList);
+                }
             }
             return urlList;
         }
