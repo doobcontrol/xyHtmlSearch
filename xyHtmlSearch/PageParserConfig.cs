@@ -47,6 +47,11 @@ namespace xyHtmlSearch
             = new Dictionary<string, PageParserConfig>();
         public static PageParserConfig get(string url)
         {
+            if(url == null)
+            {
+                return null;
+            }
+
             PageParserConfig retPpc = null;
 
             foreach (PageParserConfig ppc in AllConfigs)
