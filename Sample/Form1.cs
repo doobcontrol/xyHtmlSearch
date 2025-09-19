@@ -41,7 +41,7 @@ namespace Sample
             sps.start = @"""><a href=""";
             sps.end = @"""><span>";
             sPars.Add(sps);
-            ppc.urlSearchPars = sPars;
+            ppc.urlSearchPars = new List<List<SearchParsStruct>> { sPars };
             Dictionary<string, List<SearchParsStruct>> defaultRecordValuePars
                 = new Dictionary<string, List<SearchParsStruct>>();
             ppc.defaultRecordValuePars = defaultRecordValuePars;
@@ -81,7 +81,7 @@ namespace Sample
             sps.addBefore = "https://www.youtube.com";
             sps.addAfter = "/videos";
             sPars.Add(sps);
-            ppc.urlSearchPars = sPars;
+            ppc.urlSearchPars = new List<List<SearchParsStruct>> { sPars };
 
             //youtube videos
             ppc = new PageParserConfig();
@@ -284,7 +284,7 @@ namespace Sample
             sps.end = @"""";
             sps.addBefore = "https://amaravati.org";
             sPars.Add(sps);
-            ppc.urlSearchPars = sPars;
+            ppc.urlSearchPars = new List<List<SearchParsStruct>> { sPars };
 
             //https://amaravati.org/teachings/chanting/
             ppc = new PageParserConfig();
