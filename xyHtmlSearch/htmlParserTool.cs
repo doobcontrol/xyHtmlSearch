@@ -243,6 +243,8 @@ namespace xyHtmlSearch
 
         static private string finishHandle(string fString, SearchParsStruct sps)
         {
+            if (fString == null) return null;
+
             string retStr = fString;
             if(sps.HtmlDecode)
             {
