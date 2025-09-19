@@ -245,7 +245,7 @@ namespace xyHtmlSearch
         {
             if (fString == null) return null;
 
-            string retStr = fString;
+            string retStr = fString.Trim();
             if(sps.HtmlDecode)
             {
                 retStr = WebUtility.HtmlDecode(retStr);
@@ -291,7 +291,7 @@ namespace xyHtmlSearch
                 retStr = SearchParsStruct.transFuncDic[sps.transFunc](retStr);
             }
 
-            return retStr.Trim();
+            return retStr;
         }
 
         static List<string> illegalChrs = new List<string>{
