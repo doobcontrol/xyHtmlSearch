@@ -289,7 +289,7 @@ namespace xyHtmlSearch
                 retStr = SearchParsStruct.transFuncDic[sps.transFunc](retStr);
             }
 
-            return retStr;
+            return retStr.Trim();
         }
 
         static List<string> illegalChrs = new List<string>{
