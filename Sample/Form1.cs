@@ -107,7 +107,7 @@ namespace Sample
             sps.recordDef = spsDic;
 
             sPars.Add(sps);
-            ppc.dataSearchPars = sPars;
+            ppc.dataSearchPars = new List<List<SearchParsStruct>> { sPars };
 
             defaultRecordValuePars
                 = new Dictionary<string, List<SearchParsStruct>>();
@@ -147,7 +147,7 @@ namespace Sample
             sps.recordDef = spsDic;
 
             sPars.Add(sps);
-            ppc.dataSearchPars = sPars;
+            ppc.dataSearchPars = new List<List<SearchParsStruct>> { sPars };
 
             defaultRecordValuePars
                 = new Dictionary<string, List<SearchParsStruct>>();
@@ -186,7 +186,7 @@ namespace Sample
             sps.recordDef = spsDic;
 
             sPars.Add(sps);
-            ppc.dataSearchPars = sPars;
+            ppc.dataSearchPars = new List<List<SearchParsStruct>> { sPars };
 
             defaultRecordValuePars
                 = new Dictionary<string, List<SearchParsStruct>>();
@@ -226,7 +226,7 @@ namespace Sample
             sps.recordDef = spsDic;
 
             sPars.Add(sps);
-            ppc.dataSearchPars = sPars;
+            ppc.dataSearchPars = new List<List<SearchParsStruct>> { sPars };
 
             defaultRecordValuePars
                 = new Dictionary<string, List<SearchParsStruct>>();
@@ -266,7 +266,7 @@ namespace Sample
             sps.recordDef = spsDic;
 
             sPars.Add(sps);
-            ppc.dataSearchPars = sPars;
+            ppc.dataSearchPars = new List<List<SearchParsStruct>> { sPars };
 
             defaultRecordValuePars
                 = new Dictionary<string, List<SearchParsStruct>>();
@@ -314,7 +314,7 @@ namespace Sample
             sps.recordDef = spsDic;
 
             sPars.Add(sps);
-            ppc.dataSearchPars = sPars;
+            ppc.dataSearchPars = new List<List<SearchParsStruct>> { sPars };
 
             defaultRecordValuePars
                 = new Dictionary<string, List<SearchParsStruct>>();
@@ -349,7 +349,7 @@ namespace Sample
             sps.recordDef = spsDic;
 
             sPars.Add(sps);
-            ppc.dataSearchPars = sPars;
+            ppc.dataSearchPars = new List<List<SearchParsStruct>> { sPars };
 
             defaultRecordValuePars
                 = new Dictionary<string, List<SearchParsStruct>>();
@@ -389,7 +389,7 @@ namespace Sample
             sps.recordDef = spsDic;
 
             sPars.Add(sps);
-            ppc.dataSearchPars = sPars;
+            ppc.dataSearchPars = new List<List<SearchParsStruct>> { sPars };
 
             defaultRecordValuePars
                 = new Dictionary<string, List<SearchParsStruct>>();
@@ -429,7 +429,7 @@ namespace Sample
             sps.recordDef = spsDic;
 
             sPars.Add(sps);
-            ppc.dataSearchPars = sPars;
+            ppc.dataSearchPars = new List<List<SearchParsStruct>> { sPars };
 
             defaultRecordValuePars
                 = new Dictionary<string, List<SearchParsStruct>>();

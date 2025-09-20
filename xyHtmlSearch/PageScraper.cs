@@ -60,37 +60,43 @@ namespace xyHtmlSearch
             }
 
             //parse data
-            if (ppc.dataSearchPars != null
-                && ppc.dataSearchPars.Last().recordDef != null)
+            if (ppc.dataSearchPars != null)
             {
-                List<string> dataList =
-                    htmlParserTool.findList(htmlStr, ppc.dataSearchPars);
-
-                //search record
-                Dictionary<string, List<SearchParsStruct>> recordDef
-                    = ppc.dataSearchPars.Last().recordDef;
-                List<Dictionary<string, string>> recordList
-                    = new List<Dictionary<string, string>>();
-                foreach (string data in dataList)
+                foreach(List<SearchParsStruct> spsList in
+                    ppc.dataSearchPars)
                 {
-                    Dictionary<string, string> recordDic
-                        = [];
-
-                    recordList.Add(htmlParserTool.findMuti(data, recordDef));
-                }
-
-                foreach(string key in DefaultRecord.Keys)
-                {
-                    foreach(Dictionary<string,string> record in recordList)
+                    if(spsList.Last().recordDef != null)
                     {
-                        if (!record.ContainsKey(key))
+                        List<string> dataList =
+                            htmlParserTool.findList(htmlStr, spsList);
+
+                        //search record
+                        Dictionary<string, List<SearchParsStruct>> recordDef
+                            = spsList.Last().recordDef;
+                        List<Dictionary<string, string>> recordList
+                            = new List<Dictionary<string, string>>();
+                        foreach (string data in dataList)
                         {
-                            record.Add(key, DefaultRecord[key]);
+                            Dictionary<string, string> recordDic
+                                = [];
+
+                            recordList.Add(htmlParserTool.findMuti(data, recordDef));
                         }
+
+                        foreach (string key in DefaultRecord.Keys)
+                        {
+                            foreach (Dictionary<string, string> record in recordList)
+                            {
+                                if (!record.ContainsKey(key))
+                                {
+                                    record.Add(key, DefaultRecord[key]);
+                                }
+                            }
+                        }
+
+                        ScrapReport.reportRecordList(progress, recordList);
                     }
                 }
-
-                ScrapReport.reportRecordList(progress, recordList);
             }
 
             List<string> urlList = null;

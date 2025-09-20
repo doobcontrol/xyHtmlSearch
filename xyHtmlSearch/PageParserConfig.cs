@@ -16,7 +16,7 @@ namespace xyHtmlSearch
         public string encoding = "utf-8";
         public string Encoding { get => encoding; set => encoding = value; }
 
-        public List<SearchParsStruct> dataSearchPars;
+        public List<List<SearchParsStruct>> dataSearchPars;
 
         public List<List<SearchParsStruct>> urlSearchPars;
 
@@ -224,11 +224,17 @@ namespace xyHtmlSearch
             if(ppcJo.ContainsKey(cnDataPar))
             {
                 JsonArray dataParJa = ppcJo[cnDataPar].AsArray();
-                retPpc.dataSearchPars = new List<SearchParsStruct>();
-                foreach (JsonObject spJo in dataParJa)
+                retPpc.dataSearchPars = new List<List<SearchParsStruct>>();
+
+                foreach (JsonArray spJa in dataParJa)
                 {
-                    retPpc.dataSearchPars.Add(
-                        SearchParsStruct.fromJson(spJo));
+                    List<SearchParsStruct> spsList
+                        = new List<SearchParsStruct>();
+                    retPpc.dataSearchPars.Add(spsList);
+                    foreach (JsonObject spJo in spJa)
+                    {
+                        spsList.Add(SearchParsStruct.fromJson(spJo));
+                    }
                 }
             }
 
@@ -312,12 +318,15 @@ namespace xyHtmlSearch
             //dataSearchPars
             if (ppc.dataSearchPars != null)
             {
-                JsonArray dpJa = new JsonArray();
-                foreach (SearchParsStruct sps in ppc.dataSearchPars)
+                JsonArray dpJas = new JsonArray();
+                foreach (List<SearchParsStruct> sps in ppc.dataSearchPars)
                 {
-                    dpJa.Add(SearchParsStruct.toJson(sps));
+                    JsonArray dpJa = new JsonArray();
+                    dpJas.Add(dpJa);
+                    foreach (SearchParsStruct spss in sps)
+                        dpJa.Add(SearchParsStruct.toJson(spss));
                 }
-                retJo[cnDataPar] = dpJa;
+                retJo[cnDataPar] = dpJas;
             }
 
             //defaultRecordValuePars
