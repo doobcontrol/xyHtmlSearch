@@ -136,6 +136,10 @@ namespace xyHtmlSearch
             }
             string retStr = strForFind;
             foreach (SearchParsStruct sps in sPars) {
+                if(retStr == null)
+                {
+                    break;
+                }
                 if (sps.searchList) {
                     throw new Exception("Error pars");
                 }
