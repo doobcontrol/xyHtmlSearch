@@ -16,6 +16,9 @@ namespace xyHtmlSearch
         {
             _httpClient = httpClient ?? new HttpClient();
             _httpClient.Timeout = Timeout.InfiniteTimeSpan;
+            _httpClient.DefaultRequestHeaders.Add("User-Agent",
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
+                );
         }
 
         public async Task DownloadFileAsync(
@@ -35,7 +38,6 @@ namespace xyHtmlSearch
             string url,
             string encoding)
         {
-            _httpClient.DefaultRequestHeaders.Add("User-Agent", "Custom");
             var response = await _httpClient.GetByteArrayAsync(url);
             System.Text.Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             var responseString = await Task.Run(
