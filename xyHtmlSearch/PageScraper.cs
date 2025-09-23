@@ -66,7 +66,19 @@ namespace xyHtmlSearch
                     ppc.dataSearchPars)
                 {
                     List<Dictionary<string, string>> recordList =
-                        htmlParserTool.findRecordList(htmlStr, spsList);
+                        htmlParserTool.findRecordList(htmlStr, spsList); 
+                    
+                    foreach (string key in DefaultRecord.Keys)
+                    {
+                        foreach (Dictionary<string, string> record in recordList)
+                        {
+                            if (!record.ContainsKey(key))
+                            {
+                                record.Add(key, DefaultRecord[key]);
+                            }
+                        }
+                    }
+
                     ScrapReport.reportRecordList(progress, recordList);
                 }
             }
