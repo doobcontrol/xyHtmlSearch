@@ -65,37 +65,9 @@ namespace xyHtmlSearch
                 foreach(List<SearchParsStruct> spsList in
                     ppc.dataSearchPars)
                 {
-                    if(spsList.Last().recordDef != null)
-                    {
-                        List<string> dataList =
-                            htmlParserTool.findList(htmlStr, spsList);
-
-                        //search record
-                        Dictionary<string, List<SearchParsStruct>> recordDef
-                            = spsList.Last().recordDef;
-                        List<Dictionary<string, string>> recordList
-                            = new List<Dictionary<string, string>>();
-                        foreach (string data in dataList)
-                        {
-                            Dictionary<string, string> recordDic
-                                = [];
-
-                            recordList.Add(htmlParserTool.findMuti(data, recordDef));
-                        }
-
-                        foreach (string key in DefaultRecord.Keys)
-                        {
-                            foreach (Dictionary<string, string> record in recordList)
-                            {
-                                if (!record.ContainsKey(key))
-                                {
-                                    record.Add(key, DefaultRecord[key]);
-                                }
-                            }
-                        }
-
-                        ScrapReport.reportRecordList(progress, recordList);
-                    }
+                    List<Dictionary<string, string>> recordList =
+                        htmlParserTool.findRecordList(htmlStr, spsList);
+                    ScrapReport.reportRecordList(progress, recordList);
                 }
             }
 

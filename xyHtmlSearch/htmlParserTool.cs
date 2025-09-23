@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace xyHtmlSearch
 {
@@ -227,6 +229,156 @@ namespace xyHtmlSearch
                 }
             }
             return retList;
+        }
+
+        static public List<Dictionary<string, string>> findRecordList(
+            string strForFind, List<SearchParsStruct> sPars)
+        {
+            if (sPars == null || sPars.Count == 0)
+            {
+                throw new Exception("No search pars");
+            }
+
+            List<Dictionary<string, string>> retList = [];
+            
+            List<(string s, Dictionary<string, string> d)> SearchStrList = null;
+            (string s, Dictionary<string, string> d) searchStr =
+                (s: strForFind, d: new Dictionary<string, string>());
+
+            foreach (SearchParsStruct sps in sPars)
+            {
+                List<string> tempStrList;
+                string tempStr;
+                Dictionary<string, string> tempDic;
+                List<(string s, Dictionary<string, string> d)> 
+                    tempSearchStrList = null;
+                if (SearchStrList == null)
+                {
+                    if (sps.searchList)
+                    {
+                        tempStrList =
+                            findAllBetween(searchStr.s,
+                                (sps.start == null) ? "" : sps.start,
+                                (sps.end == null) ? "" : sps.end);
+                        SearchStrList = [];
+                        foreach (string ts in tempStrList)
+                        {
+                            if (sps.recordDef != null)
+                            {
+                                tempDic = findMuti(ts, sps.recordDef);
+                                foreach (string key in searchStr.d.Keys)
+                                {
+                                    if (!tempDic.ContainsKey(key))
+                                    {
+                                        tempDic.Add(key, searchStr.d[key]);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                tempDic = searchStr.d;
+                            }
+                            SearchStrList.Add((ts, tempDic));
+                        }
+                    }
+                    else
+                    {
+                        tempStr = findBetween(searchStr.s,
+                                    (sps.start == null) ? "" : sps.start,
+                                    (sps.end == null) ? "" : sps.end);
+                        if (sps.recordDef != null)
+                        {
+                            tempDic = findMuti(tempStr, sps.recordDef);
+                            foreach(string key in searchStr.d.Keys)
+                            {
+                                if(!tempDic.ContainsKey(key))
+                                {
+                                    tempDic.Add(key, searchStr.d[key]);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            tempDic = searchStr.d;
+                        }
+                        searchStr = (tempStr, tempDic);
+                    }
+                }
+                else
+                {
+                    if (sps.searchList)
+                    {
+                        tempSearchStrList = [];
+                        foreach ((string s, Dictionary<string, string> d) s 
+                            in SearchStrList)
+                        {
+                            tempStrList = findAllBetween(s.s,
+                                    (sps.start == null) ? "" : sps.start,
+                                    (sps.end == null) ? "" : sps.end);
+                            foreach(string ts in tempStrList)
+                            {
+                                if (sps.recordDef != null)
+                                {
+                                    tempDic = findMuti(ts, sps.recordDef);
+                                    foreach(string key in s.d.Keys)
+                                    {
+                                        if(!tempDic.ContainsKey(key))
+                                        {
+                                            tempDic.Add(key, s.d[key]);
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    tempDic = s.d;
+                                }
+                                tempSearchStrList.Add((ts, tempDic));
+                            }
+                        }
+                        SearchStrList = tempSearchStrList;
+                    }
+                    else
+                    {
+                        tempSearchStrList = [];
+                        foreach ((string s, Dictionary<string, string> d) s 
+                            in SearchStrList)
+                        {
+                            tempStr = findBetween(s.s,
+                                (sps.start == null) ? "" : sps.start,
+                                (sps.end == null) ? "" : sps.end);
+                            if (sps.recordDef != null)
+                            {
+                                tempDic = findMuti(tempStr, sps.recordDef);
+                                foreach (string key in s.d.Keys)
+                                {
+                                    if (!tempDic.ContainsKey(key))
+                                    {
+                                        tempDic.Add(key, s.d[key]);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                tempDic = s.d;
+                            }
+                            tempSearchStrList.Add((tempStr, tempDic));
+                        }
+                        SearchStrList = tempSearchStrList;
+                    }
+                }
+            }
+
+            List < Dictionary<string, string> > outPutList = [];
+            if (SearchStrList != null)
+            {
+                foreach ((string s, Dictionary<string, string> d) s 
+                    in SearchStrList)
+                {
+                    outPutList.Add(s.d);
+                }
+            }
+
+            return outPutList;
         }
 
         static public Dictionary<string,string> findMuti(
