@@ -112,6 +112,10 @@ namespace xyHtmlSearch
                 {
                     break;
                 }
+                if (token.IsCancellationRequested)
+                {
+                    break;
+                }
 
                 (string url, int l) uNode = uStack.Pop();
                 string url = uNode.url;
@@ -153,8 +157,6 @@ namespace xyHtmlSearch
                     break;
                 }
                 if (token.IsCancellationRequested) {
-                    //save the break point?
-
                     break; 
                 }
             }
