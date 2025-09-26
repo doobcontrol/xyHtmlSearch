@@ -389,6 +389,12 @@ namespace xyHtmlSearch
             return retJo;
         }
 
+        static public PageParserConfig copy(PageParserConfig ppc)
+        {
+            JsonObject jo = toJson(ppc);
+            return fromJson(jo);
+        }
+
         #region Config file JSON definition
 
         public static string cnFields = "fields";
