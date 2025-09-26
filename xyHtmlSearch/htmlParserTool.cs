@@ -438,8 +438,16 @@ namespace xyHtmlSearch
             {
                 retStr = retStr + sps.addAfter;
             }
+            if(sps.replaceDic != null)
+            {
+                foreach(string key in sps.replaceDic.Keys)
+                {
+                    retStr = retStr.Replace(key, sps.replaceDic[key]);
+                }
+                retStr = retStr.Trim();
+            }
 
-            if(sps.transFunc != null 
+            if (sps.transFunc != null 
                 && sps.transFunc != ""
                 && SearchParsStruct.transFuncDic.ContainsKey(sps.transFunc)
                 )
@@ -514,6 +522,7 @@ namespace xyHtmlSearch
         public bool Unescape = true;
         public string frontSplitter; //Get the part before first occurrence of this string
         public string backSplitter;  //Get the part after last occurrence of this string
+        public Dictionary<string, string> replaceDic; //Replace string according to this dictionary
 
         public string constant; //If this variable is not null, the other variables are meaningless.
         
@@ -576,6 +585,15 @@ namespace xyHtmlSearch
             }
             if (spsJo[PageParserConfig.cnFrontSplitter] != null) {
                 retSps.frontSplitter = spsJo[PageParserConfig.cnFrontSplitter].GetValue<string>();
+            }
+            if (spsJo[PageParserConfig.cnReplace] != null)
+            {
+                retSps.replaceDic = new Dictionary<string, string>();
+                JsonObject rdJo = spsJo[PageParserConfig.cnReplace].AsObject();
+                foreach (var property in rdJo)
+                {
+                    retSps.replaceDic.Add(property.Key, property.Value.GetValue<string>());
+                }
             }
             if (spsJo[PageParserConfig.cnBackSplitter] != null) {
                 retSps.backSplitter = spsJo[PageParserConfig.cnBackSplitter].GetValue<string>();
@@ -648,6 +666,15 @@ namespace xyHtmlSearch
             {
                 retJo[PageParserConfig.cnBackSplitter] = sps.backSplitter;
             }
+            if (sps.replaceDic != null && sps.replaceDic.Count > 0)
+            {
+                JsonObject rdJo = new JsonObject();
+                foreach (string key in sps.replaceDic.Keys)
+                {
+                    rdJo[key] = sps.replaceDic[key];
+                }
+                retJo[PageParserConfig.cnReplace] = rdJo;
+            }   
             if (sps.constant != null && sps.constant != "")
             {
                 retJo[PageParserConfig.cnConstant] = sps.constant;

@@ -421,6 +421,7 @@ namespace xyHtmlSearch
         public static string cnUnescape = "Unescape";
         public static string cnFrontSplitter = "frontSplitter";
         public static string cnBackSplitter = "backSplitter";
+        public static string cnReplace = "replace";
         public static string cnConstant = "constant";
         public static string cnTransFunc = "transFunc";
 
