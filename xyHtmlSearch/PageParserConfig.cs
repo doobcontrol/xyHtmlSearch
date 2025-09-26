@@ -123,6 +123,47 @@ namespace xyHtmlSearch
             string jsonString = JsonSerializer.Serialize(newCfg);
             File.WriteAllText(configFile, jsonString);
         }
+        public static void Save(
+            string saveFile, 
+            List<PageParserConfig> saveModels
+            )
+        {
+            JsonObject newCfg = new JsonObject();
+            newCfg[cnFields] = new JsonArray();
+            newCfg[cnUrlModels] = new JsonArray();
+            foreach (string field in RecordFields)
+            {
+                newCfg[cnFields].AsArray().Add(field);
+            }
+            foreach (PageParserConfig ppc in saveModels)
+            {
+                newCfg[cnUrlModels].AsArray().Add(toJson(ppc));
+            }
+            string jsonString = JsonSerializer.Serialize(newCfg);
+            File.WriteAllText(saveFile, jsonString);
+        }
+        public static List<PageParserConfig> Read(string cFile)
+        {
+            if (!File.Exists(cFile))
+            {
+                throw new Exception("Config file not exist: " + cFile);
+            }
+            string json = File.ReadAllText(cFile);
+            JsonObject? rootJo = JsonSerializer.Deserialize<JsonObject>(json);
+            if (rootJo == null)
+            {
+                throw new Exception("Load configure failure");
+            }
+
+            //urlModels
+            JsonArray UmJa = rootJo[cnUrlModels].AsArray();
+            List<PageParserConfig> modelConfigs = new List<PageParserConfig>();
+            foreach (JsonObject ppcJo in UmJa)
+            {
+                modelConfigs.Add(fromJson(ppcJo));
+            }
+            return modelConfigs;
+        }
         public static void init(string cFile = "xySearch.cfg")
         {
             configFile = cFile;
