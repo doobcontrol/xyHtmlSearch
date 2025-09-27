@@ -10,7 +10,11 @@ namespace xyHtmlSearch
     public class HttpClientDownloader
     {
         private readonly HttpClient _httpClient;
-
+        public TimeSpan HttpTimeout
+        {
+            get => _httpClient.Timeout;
+            set => _httpClient.Timeout = value;
+        }
         //For unit testing
         public HttpClientDownloader(HttpClient? httpClient = null)
         {

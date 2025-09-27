@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,11 @@ namespace xyHtmlSearch
     public class PageScraper
     {
         private static HttpClientDownloader hcd = new HttpClientDownloader();
+        public static TimeSpan HttpTimeout
+        {
+            get => hcd.HttpTimeout;
+            set => hcd.HttpTimeout = value;
+        }
 
         public static async Task<List<string>> ScrapOneAsync(
             string url,
