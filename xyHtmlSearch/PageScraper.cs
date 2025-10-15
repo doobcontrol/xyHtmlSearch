@@ -22,6 +22,10 @@ namespace xyHtmlSearch
             int level,
             IProgress<ScrapReport> progress)
         {
+            if (!url.StartsWith("https://"))
+            {
+                url = "https://" + url;
+            }
             PageParserConfig ppc = PageParserConfig.get(url);
 
             if (ppc == null)

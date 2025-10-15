@@ -88,6 +88,10 @@ namespace xyHtmlSearch
                     }
                 }
             }
+            if(retPpc == null && !url.StartsWith("https://"))
+            {
+                retPpc = get("https://" + url);
+            }
             return retPpc;
         }
         public static nameParser nameParser;
