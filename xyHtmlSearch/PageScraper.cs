@@ -129,6 +129,10 @@ namespace xyHtmlSearch
 
                 (string url, int l) uNode = uStack.Pop();
                 string url = uNode.url;
+                if (url == null)
+                {
+                    continue;
+                }
                 int level = uNode.l;
 
                 if(level <= currentLevel)

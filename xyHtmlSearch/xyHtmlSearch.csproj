@@ -13,7 +13,7 @@
     <RepositoryUrl>https://github.com/doobcontrol/xyHtmlSearch</RepositoryUrl>
     <PackageTags>HTML;WEB;SCRAPE</PackageTags>
     <PackageOutputPath>..\..\..\package</PackageOutputPath>
-    <Version>1.0.0.63</Version>
+    <Version>1.0.0.64</Version>
   </PropertyGroup>
 
   <ItemGroup>
